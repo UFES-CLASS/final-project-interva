@@ -1,0 +1,5 @@
+com\fad\LibrarySystem\App.class
+com\fad\LibrarySystem\model\CafeMenuItem.class
+com\fad\LibrarySystem\controller\InventoryController.class
+com\fad\LibrarySystem\model\InventoryItem.class
+com\fad\LibrarySystem\controller\MenuController.class
