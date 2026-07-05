@@ -16,7 +16,7 @@
             style="-fx-background-color:#F7F2EA;"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.fad.LibrarySystem.controller.MenuController">
+            fx:controller="interva.sambikopi.controller.MenuController">
 
     <left>
         <VBox prefWidth="220.0" spacing="15.0" style="-fx-background-color:#2D1B14;">
@@ -24,7 +24,7 @@
                 <Insets bottom="25.0" left="15.0" right="15.0" top="25.0" />
             </padding>
 
-            <Label text="Sambi Kopi" maxWidth="9999"
+            <Label text="Sambi Kopi" maxWidth="9999" alignment="CENTER"
                    style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:white; -fx-alignment:center;" />
             <Separator />
 
@@ -50,14 +50,13 @@
                 <Label text="Fix the flagged fields, then confirm again." style="-fx-text-fill:#666666; -fx-font-size:15px;" />
             </VBox>
 
-            <HBox spacing="10.0"
-                  style="-fx-background-color:#FBE4DE; -fx-border-color:#E9C1B6; -fx-border-radius:10; -fx-background-radius:10;">
+            <HBox fx:id="messageBox" alignment="CENTER" spacing="10.0"
+                  style="-fx-background-color:#EEF7EA; -fx-border-color:#D7EBCF; -fx-border-radius:10; -fx-background-radius:10;">
                 <padding>
                     <Insets bottom="12.0" left="15.0" right="15.0" top="12.0" />
                 </padding>
-                <Label text="X" style="-fx-text-fill:#C65D42; -fx-font-size:18px; -fx-font-weight:bold;" />
-                <Label fx:id="messageLabel" text="Incomplete data. Ingredients wajib diisi minimal 1 item sebelum menu bisa divalidasi."
-                       wrapText="true" style="-fx-text-fill:#B04A34; -fx-font-weight:bold;" />
+                <Label fx:id="messageLabel" maxWidth="9999" text="Fill the menu data, then confirm again."
+                       alignment="CENTER" wrapText="true" style="-fx-text-fill:#4F8B45; -fx-font-weight:bold; -fx-alignment:center;" />
             </HBox>
 
             <HBox spacing="15.0">
@@ -74,8 +73,8 @@
                 </VBox>
 
                 <VBox spacing="5.0">
-                    <Label text="PRICE" style="-fx-font-weight:bold;" />
-                    <TextField fx:id="priceField" prefHeight="42.0" prefWidth="140.0" promptText="3.50"
+                    <Label text="PRICE (IDR)" style="-fx-font-weight:bold;" />
+                    <TextField fx:id="priceField" prefHeight="42.0" prefWidth="140.0" promptText="18000"
                                style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
                 </VBox>
             </HBox>
@@ -92,7 +91,7 @@
                 <Button fx:id="cancelButton" onAction="#handleCancel" prefHeight="42.0" prefWidth="110.0" text="Cancel"
                         style="-fx-background-color:white; -fx-border-color:#DDDDDD; -fx-background-radius:10; -fx-border-radius:10;" />
                 <Button fx:id="deleteMenuButton" onAction="#handleDeleteMenu" prefHeight="42.0" prefWidth="120.0" text="Delete"
-                        style="-fx-background-color:#B04A34; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+                        style="-fx-background-color:#D94141; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
             </HBox>
 
             <HBox spacing="10.0">
@@ -109,7 +108,7 @@
                 <columns>
                     <TableColumn fx:id="menuNameColumn" prefWidth="230.0" text="MENU NAME" />
                     <TableColumn fx:id="categoryColumn" prefWidth="200.0" text="CATEGORY" />
-                    <TableColumn fx:id="priceColumn" prefWidth="100.0" text="PRICE" />
+                    <TableColumn fx:id="priceColumn" prefWidth="100.0" text="PRICE (IDR)" />
                     <TableColumn fx:id="ingredientsColumn" prefWidth="260.0" text="INGREDIENTS" />
                     <TableColumn fx:id="statusColumn" prefWidth="160.0" text="STATUS" />
                 </columns>

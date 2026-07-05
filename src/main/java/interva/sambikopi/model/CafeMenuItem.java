@@ -1,4 +1,4 @@
-package com.fad.LibrarySystem.model;
+package interva.sambikopi.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

@@ -5,8 +5,8 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.fad</groupId>
-    <artifactId>brewline-pos</artifactId>
+    <groupId>interva</groupId>
+    <artifactId>sambi-kopi-pos</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -45,7 +45,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.fad.LibrarySystem.App</mainClass>
+                    <mainClass>interva.sambikopi.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>

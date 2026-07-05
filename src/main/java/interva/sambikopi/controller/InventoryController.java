@@ -1,7 +1,7 @@
-package com.fad.LibrarySystem.controller;
+package interva.sambikopi.controller;
 
-import com.fad.LibrarySystem.App;
-import com.fad.LibrarySystem.model.InventoryItem;
+import interva.sambikopi.App;
+import interva.sambikopi.model.InventoryItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -196,8 +196,8 @@ public class InventoryController {
     }
 
     @FXML
-    private void handleOpenOrders() {
-        showInfo("Orders", "Orders page is not created yet.");
+    private void handleOpenOrders() throws IOException {
+        App.setRoot("orders.fxml");
     }
 
     private void setStatus(String message, boolean error) {

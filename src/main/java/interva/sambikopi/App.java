@@ -1,4 +1,4 @@
-package com.fad.LibrarySystem;
+package interva.sambikopi;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("menu"), 1200, 700);
+        scene = new Scene(loadFXML("orders"), 1200, 700);
         stage.setTitle("Sambi Kopi POS");
         stage.setScene(scene);
         stage.show();
@@ -27,7 +27,7 @@ public class App extends Application {
 
     private static Parent loadFXML(String fxmlName) throws IOException {
         String cleanName = cleanFxmlName(fxmlName);
-        String resourcePath = "/com/fad/LibrarySystem/view/" + cleanName + ".fxml";
+        String resourcePath = "/interva/sambikopi/view/" + cleanName + ".fxml";
         URL fxmlUrl = App.class.getResource(resourcePath);
 
         if (fxmlUrl == null) {

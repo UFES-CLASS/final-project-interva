@@ -15,7 +15,7 @@
             style="-fx-background-color:#F7F2EA;"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.fad.LibrarySystem.controller.InventoryController">
+            fx:controller="interva.sambikopi.controller.InventoryController">
 
     <left>
         <VBox prefWidth="220.0" spacing="15.0" style="-fx-background-color:#2D1B14;">
@@ -23,16 +23,16 @@
                 <Insets bottom="25.0" left="15.0" right="15.0" top="25.0" />
             </padding>
 
-            <Label text="Sambi Kopi" maxWidth="9999"
+            <Label text="Sambi Kopi" maxWidth="9999" alignment="CENTER"
                    style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:white; -fx-alignment:center;" />
             <Separator />
 
             <Button fx:id="dashboardButton" onAction="#handleOpenDashboard" maxWidth="9999" text="Dashboard"
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
-            <Button fx:id="inventoryButton" onAction="#handleOpenInventory" maxWidth="9999" text="Inventory"
-                    style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-background-radius:10;" />
             <Button fx:id="menuButton" onAction="#handleOpenMenu" maxWidth="9999" text="Menu"
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
+            <Button fx:id="inventoryButton" onAction="#handleOpenInventory" maxWidth="9999" text="Inventory"
+                    style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-background-radius:10;" />
             <Button fx:id="ordersButton" onAction="#handleOpenOrders" maxWidth="9999" text="Orders"
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
         </VBox>

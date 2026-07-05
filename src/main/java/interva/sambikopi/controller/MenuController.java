@@ -1,7 +1,7 @@
-package com.fad.LibrarySystem.controller;
+package interva.sambikopi.controller;
 
-import com.fad.LibrarySystem.App;
-import com.fad.LibrarySystem.model.CafeMenuItem;
+import interva.sambikopi.App;
+import interva.sambikopi.model.CafeMenuItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -14,8 +14,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class MenuController {
 
@@ -24,6 +27,7 @@ public class MenuController {
     @FXML private Button inventoryButton;
     @FXML private Button ordersButton;
 
+    @FXML private HBox messageBox;
     @FXML private Label messageLabel;
     @FXML private TextField menuNameField;
     @FXML private ComboBox<String> categoryComboBox;
@@ -63,10 +67,10 @@ public class MenuController {
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         masterMenuData.addAll(
-                new CafeMenuItem("Kopi Milk Gula Aren", "Beverage - Coffee", "3.50", "Milk, Coffee, Palm Sugar", "Pending Approval"),
-                new CafeMenuItem("Americano", "Beverage - Coffee", "2.80", "Espresso, Water", "Approved"),
-                new CafeMenuItem("Matcha Latte", "Beverage - Non Coffee", "4.00", "Matcha, Milk, Sugar", "Approved"),
-                new CafeMenuItem("Almond Croissant", "Pastry", "3.20", "Flour, Butter, Almond", "Pending Approval")
+                new CafeMenuItem("Kopi Milk Gula Aren", "Beverage - Coffee", formatToIdr("18000"), "Milk, Coffee, Palm Sugar", "Pending Approval"),
+                new CafeMenuItem("Americano", "Beverage - Coffee", formatToIdr("15000"), "Espresso, Water", "Approved"),
+                new CafeMenuItem("Matcha Latte", "Beverage - Non Coffee", formatToIdr("22000"), "Matcha, Milk, Sugar", "Approved"),
+                new CafeMenuItem("Almond Croissant", "Pastry", formatToIdr("25000"), "Flour, Butter, Almond", "Pending Approval")
         );
 
         filteredMenuData = new FilteredList<>(masterMenuData, item -> true);
@@ -126,9 +130,11 @@ public class MenuController {
         }
 
         if (!isValidPrice(price)) {
-            setMessage("Price must be a valid number, for example 3.50.", true);
+            setMessage("Price must be a valid IDR amount, for example 18000 or Rp 18.000.", true);
             return;
         }
+
+        price = formatToIdr(price);
 
         if (ingredients.isEmpty()) {
             setMessage("Incomplete data. Ingredients wajib diisi minimal 1 item sebelum menu bisa divalidasi.", true);
@@ -189,8 +195,8 @@ public class MenuController {
     }
 
     @FXML
-    private void handleOpenOrders() {
-        showInfo("Orders", "Orders page is not created yet.");
+    private void handleOpenOrders() throws IOException {
+        App.setRoot("orders.fxml");
     }
 
     private void fillForm(CafeMenuItem item) {
@@ -210,17 +216,47 @@ public class MenuController {
 
     private boolean isValidPrice(String price) {
         try {
-            return Double.parseDouble(price) >= 0;
+            return parseIdrAmount(price) >= 0;
         } catch (NumberFormatException e) {
             return false;
         }
     }
 
+    private long parseIdrAmount(String price) {
+        String clean = price == null ? "" : price.trim()
+                .replace("Rp", "")
+                .replace("rp", "")
+                .replace("IDR", "")
+                .replace("idr", "")
+                .replace(".", "")
+                .replace(",", "")
+                .replace(" ", "");
+
+        if (clean.isEmpty()) {
+            throw new NumberFormatException("Price is empty");
+        }
+
+        return Long.parseLong(clean);
+    }
+
+    private String formatToIdr(String price) {
+        long amount = parseIdrAmount(price);
+
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+
+        DecimalFormat formatter = new DecimalFormat("#,###", symbols);
+        return "Rp " + formatter.format(amount);
+    }
+
     private void setMessage(String message, boolean error) {
         messageLabel.setText(message);
+        messageBox.setStyle(error
+                ? "-fx-background-color:#FBE4DE; -fx-border-color:#E9C1B6; -fx-border-radius:10; -fx-background-radius:10;"
+                : "-fx-background-color:#EEF7EA; -fx-border-color:#D7EBCF; -fx-border-radius:10; -fx-background-radius:10;");
         messageLabel.setStyle(error
-                ? "-fx-text-fill:#B04A34; -fx-font-weight:bold;"
-                : "-fx-text-fill:#5E8B5A; -fx-font-weight:bold;");
+                ? "-fx-text-fill:#B04A34; -fx-font-weight:bold; -fx-alignment:center;"
+                : "-fx-text-fill:#4F8B45; -fx-font-weight:bold; -fx-alignment:center;");
     }
 
     private void showInfo(String title, String message) {
