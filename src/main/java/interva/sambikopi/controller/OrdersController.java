@@ -1,68 +1,39 @@
 package interva.sambikopi.controller;
 
-import interva.sambikopi.App;
 import interva.sambikopi.model.OrderItem;
 import interva.sambikopi.model.SambiKopiDataStore;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class OrdersController {
 
-    @FXML private Button dashboardButton;
-    @FXML private Button menuButton;
-    @FXML private Button menuListButton;
-    @FXML private Button inventoryButton;
-    @FXML private Button ordersButton;
-
     @FXML private TextField orderSearchField;
-    @FXML private Button searchOrderButton;
-    @FXML private Button filterButton;
-    @FXML private Button refreshOrderButton;
-    @FXML private Button completeOrderButton;
-    @FXML private Button assignOrderButton;
-    @FXML private Button cancelOrderButton;
     @FXML private Label orderStatusLabel;
-
-    @FXML private Button addOrderButton;
-    @FXML private VBox incomingOrderPane;
-    @FXML private Button closeIncomingOrderButton;
-    @FXML private Button acceptIncomingOrderButton;
-    @FXML private Button rejectIncomingOrderButton;
-    @FXML private Label incomingOrderIdLabel;
-    @FXML private Label incomingCustomerLabel;
-    @FXML private Label incomingProductLabel;
-    @FXML private Label incomingDateLabel;
-    @FXML private Label incomingStatusLabel;
-
     @FXML private TableView<OrderItem> orderTable;
-    @FXML private TableColumn<OrderItem, String> orderIdColumn;
-    @FXML private TableColumn<OrderItem, String> customerColumn;
-    @FXML private TableColumn<OrderItem, String> productColumn;
-    @FXML private TableColumn<OrderItem, String> creationDateColumn;
-    @FXML private TableColumn<OrderItem, String> orderStatusColumn;
+    @FXML private TableColumn<OrderItem, String> colOrderId;
+    @FXML private TableColumn<OrderItem, String> colCustomer;
+    @FXML private TableColumn<OrderItem, String> colProduct;
+    @FXML private TableColumn<OrderItem, String> colCreationDate;
+    @FXML private TableColumn<OrderItem, String> colPayment;
+    @FXML private TableColumn<OrderItem, String> colStatus;
 
     private FilteredList<OrderItem> filteredOrderData;
-    private boolean activeOnlyFilter = false;
-    private OrderItem incomingOrder;
+    private boolean activeOnlyFilter;
 
     @FXML
     private void initialize() {
-        orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-        customerColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
-        productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
-        creationDateColumn.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
-        orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colOrderId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colCustomer.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        colProduct.setCellValueFactory(new PropertyValueFactory<>("product"));
+        colCreationDate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
+        colPayment.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
+        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
 
         filteredOrderData = new FilteredList<>(SambiKopiDataStore.getOrders(), order -> true);
         orderTable.setItems(filteredOrderData);
@@ -73,54 +44,12 @@ public class OrdersController {
             }
         });
 
-        setStatus("Orders page ready.", false);
-    }
-
-    @FXML
-    private void handleShowAddOrderPanel() {
-        incomingOrder = SambiKopiDataStore.createIncomingOrder();
-        showIncomingOrder(incomingOrder);
-        incomingOrderPane.setManaged(true);
-        incomingOrderPane.setVisible(true);
-        setStatus("New incoming order is ready to be accepted.", false);
-    }
-
-    @FXML
-    private void handleHideIncomingOrderPanel() {
-        incomingOrderPane.setVisible(false);
-        incomingOrderPane.setManaged(false);
-        incomingOrder = null;
-        setStatus("Incoming order panel closed.", false);
-    }
-
-    @FXML
-    private void handleAcceptIncomingOrder() {
-        if (incomingOrder == null) {
-            incomingStatusLabel.setText("No incoming order to accept.");
-            return;
+        int newOrders = SambiKopiDataStore.consumeBaristaNotificationCount();
+        if (newOrders > 0) {
+            setStatus("New cashier order received: " + newOrders + " order(s) waiting.", false);
+        } else {
+            setStatus("Barista Orders ready.", false);
         }
-
-        SambiKopiDataStore.getOrders().add(incomingOrder);
-        orderTable.getSelectionModel().select(incomingOrder);
-        incomingStatusLabel.setText("Accepted: " + incomingOrder.getOrderId());
-        setStatus("Incoming order accepted: " + incomingOrder.getOrderId(), false);
-        incomingOrder = null;
-        incomingOrderPane.setVisible(false);
-        incomingOrderPane.setManaged(false);
-    }
-
-    @FXML
-    private void handleRejectIncomingOrder() {
-        if (incomingOrder == null) {
-            incomingStatusLabel.setText("No incoming order to reject.");
-            return;
-        }
-
-        String rejectedId = incomingOrder.getOrderId();
-        incomingOrder = null;
-        incomingOrderPane.setVisible(false);
-        incomingOrderPane.setManaged(false);
-        setStatus("Incoming order rejected: " + rejectedId, true);
     }
 
     @FXML
@@ -133,7 +62,6 @@ public class OrdersController {
     @FXML
     private void handleFilterOrders() {
         activeOnlyFilter = !activeOnlyFilter;
-        filterButton.setText(activeOnlyFilter ? "Active Only" : "Filters");
         applyFilters();
         setStatus(activeOnlyFilter ? "Showing active orders only." : "Filter cleared.", false);
     }
@@ -142,98 +70,51 @@ public class OrdersController {
     private void handleRefreshOrders() {
         orderSearchField.clear();
         activeOnlyFilter = false;
-        filterButton.setText("Filters");
         filteredOrderData.setPredicate(order -> true);
-        orderTable.getSelectionModel().clearSelection();
+        orderTable.refresh();
         setStatus("Orders refreshed.", false);
     }
 
     @FXML
     private void handleCompleteOrder() {
-        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            setStatus("Select an order first.", true);
-            return;
-        }
-
-        selected.setStatus("Complete");
-        orderTable.refresh();
-        setStatus("Order completed: " + selected.getOrderId(), false);
+        updateSelectedOrderStatus("Complete", "Order completed: ");
     }
 
     @FXML
     private void handleAssignOrder() {
-        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            setStatus("Select an order first.", true);
-            return;
-        }
-
-        selected.setStatus("Assigned");
-        orderTable.refresh();
-        setStatus("Order assigned: " + selected.getOrderId(), false);
+        updateSelectedOrderStatus("Assigned", "Order assigned: ");
     }
 
     @FXML
     private void handleCancelOrder() {
+        updateSelectedOrderStatus("Cancelled", "Order cancelled: ");
+    }
+
+    private void updateSelectedOrderStatus(String status, String successMessage) {
         OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             setStatus("Select an order first.", true);
             return;
         }
-
-        selected.setStatus("Cancelled");
+        selected.setStatus(status);
         orderTable.refresh();
-        setStatus("Order cancelled: " + selected.getOrderId(), true);
-    }
-
-    @FXML
-    private void handleOpenDashboard() {
-        showInfo("Dashboard", "Dashboard page is still under development.");
-    }
-
-    @FXML
-    private void handleOpenMenu() throws IOException {
-        App.setRoot("menu.fxml");
-    }
-
-    @FXML
-    private void handleOpenMenuList() throws IOException {
-        App.setRoot("menu_list.fxml");
-    }
-
-    @FXML
-    private void handleOpenInventory() throws IOException {
-        App.setRoot("inventory.fxml");
-    }
-
-    @FXML
-    private void handleOpenOrders() throws IOException {
-        App.setRoot("orders.fxml");
-    }
-
-    private void showIncomingOrder(OrderItem order) {
-        incomingOrderIdLabel.setText(order.getOrderId());
-        incomingCustomerLabel.setText(order.getCustomer());
-        incomingProductLabel.setText(order.getProduct());
-        incomingDateLabel.setText(order.getCreationDate());
-        incomingStatusLabel.setText("Incoming order. Accept to add it to the order list.");
+        setStatus(successMessage + selected.getOrderId(), status.equals("Cancelled"));
     }
 
     private void applyFilters() {
         String keyword = orderSearchField.getText().trim().toLowerCase();
-
         filteredOrderData.setPredicate(order -> {
             boolean matchesKeyword = keyword.isEmpty()
                     || order.getOrderId().toLowerCase().contains(keyword)
                     || order.getCustomer().toLowerCase().contains(keyword)
                     || order.getProduct().toLowerCase().contains(keyword)
                     || order.getCreationDate().toLowerCase().contains(keyword)
+                    || order.getPaymentMethod().toLowerCase().contains(keyword)
                     || order.getStatus().toLowerCase().contains(keyword);
 
             boolean matchesActiveFilter = !activeOnlyFilter
-                    || !order.getStatus().equalsIgnoreCase("Complete")
-                    && !order.getStatus().equalsIgnoreCase("Cancelled");
+                    || (!order.getStatus().equalsIgnoreCase("Complete")
+                    && !order.getStatus().equalsIgnoreCase("Cancelled"));
 
             return matchesKeyword && matchesActiveFilter;
         });
@@ -244,12 +125,5 @@ public class OrdersController {
         orderStatusLabel.setStyle(error
                 ? "-fx-text-fill:#B04A34; -fx-font-weight:bold;"
                 : "-fx-text-fill:#4F6448; -fx-font-weight:bold;");
-    }
-
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.showAndWait();
     }
 }

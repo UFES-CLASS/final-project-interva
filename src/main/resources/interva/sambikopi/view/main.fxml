@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane xmlns="http://javafx.com/javafx/17"
+         xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="interva.sambikopi.controller.MainController"
+         prefWidth="1280.0"
+         prefHeight="760.0"
+         tabClosingPolicy="UNAVAILABLE"
+         style="-fx-background-color:#F7F2EA; -fx-font-family:'Segoe UI';">
+
+    <tabs>
+        <Tab text="Barista">
+            <content>
+                <BorderPane prefWidth="1280.0" prefHeight="730.0" style="-fx-background-color:#F7F2EA;">
+                    <left>
+                        <VBox prefWidth="220.0" spacing="20.0" style="-fx-background-color:#2D1B14;">
+                            <padding>
+                                <Insets bottom="30.0" left="18.0" right="18.0" top="35.0" />
+                            </padding>
+
+                            <HBox spacing="10.0">
+                                <Label text=" " prefWidth="26.0" prefHeight="26.0" style="-fx-background-color:#C96B43; -fx-background-radius:6;" />
+                                <VBox spacing="2.0">
+                                    <Label text="Sambi Kopi" style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;" />
+                                    <Label fx:id="baristaStatusLabel" text="Barista" style="-fx-font-size:12px; -fx-text-fill:#D8C8BC;" />
+                                </VBox>
+                            </HBox>
+
+                            <Separator style="-fx-background-color:#5B463A;" />
+
+                            <Button fx:id="baristaMenuButton" onAction="#showBaristaMenu" maxWidth="9999" prefHeight="42.0" text="Menu" />
+                            <Button fx:id="baristaMenuListButton" onAction="#showBaristaMenuList" maxWidth="9999" prefHeight="42.0" text="Menu List" />
+                            <Button fx:id="baristaStockButton" onAction="#showBaristaStock" maxWidth="9999" prefHeight="42.0" text="Stock" />
+                            <Button fx:id="baristaOrdersButton" onAction="#showBaristaOrders" maxWidth="9999" prefHeight="42.0" text="Orders" />
+                        </VBox>
+                    </left>
+
+                    <center>
+                        <StackPane fx:id="baristaContentPane" style="-fx-background-color:#F7F2EA;" />
+                    </center>
+                </BorderPane>
+            </content>
+        </Tab>
+
+        <Tab text="Cashier">
+            <content>
+                <BorderPane prefWidth="1280.0" prefHeight="730.0" style="-fx-background-color:#F7F2EA;">
+                    <left>
+                        <VBox prefWidth="220.0" spacing="20.0" style="-fx-background-color:#2D1B14;">
+                            <padding>
+                                <Insets bottom="30.0" left="18.0" right="18.0" top="35.0" />
+                            </padding>
+
+                            <HBox spacing="10.0">
+                                <Label text=" " prefWidth="26.0" prefHeight="26.0" style="-fx-background-color:#C96B43; -fx-background-radius:6;" />
+                                <VBox spacing="2.0">
+                                    <Label text="Sambi Kopi" style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;" />
+                                    <Label fx:id="cashierStatusLabel" text="Cashier" style="-fx-font-size:12px; -fx-text-fill:#D8C8BC;" />
+                                </VBox>
+                            </HBox>
+
+                            <Separator style="-fx-background-color:#5B463A;" />
+
+                            <Button fx:id="cashierMenuButton" onAction="#showCashierMenu" maxWidth="9999" prefHeight="42.0" text="Menu" />
+                            <Button fx:id="cashierOrdersButton" onAction="#showCashierOrders" maxWidth="9999" prefHeight="42.0" text="Orders" />
+                            <Button fx:id="cashierReportButton" onAction="#showCashierReport" maxWidth="9999" prefHeight="42.0" text="Report" />
+                        </VBox>
+                    </left>
+
+                    <center>
+                        <StackPane fx:id="cashierContentPane" style="-fx-background-color:#F7F2EA;" />
+                    </center>
+                </BorderPane>
+            </content>
+        </Tab>
+
+        <Tab text="Owner">
+            <content>
+                <BorderPane prefWidth="1280.0" prefHeight="730.0" style="-fx-background-color:#F7F2EA;">
+                    <left>
+                        <VBox fx:id="ownerSidebar" prefWidth="220.0" spacing="20.0" style="-fx-background-color:#2D1B14;">
+                            <padding>
+                                <Insets bottom="30.0" left="18.0" right="18.0" top="35.0" />
+                            </padding>
+
+                            <HBox spacing="10.0">
+                                <Label text=" " prefWidth="26.0" prefHeight="26.0" style="-fx-background-color:#C96B43; -fx-background-radius:6;" />
+                                <VBox spacing="2.0">
+                                    <Label text="Sambi Kopi" style="-fx-font-size:20px; -fx-font-weight:bold; -fx-text-fill:white;" />
+                                    <Label fx:id="ownerStatusLabel" text="Owner" style="-fx-font-size:12px; -fx-text-fill:#D8C8BC;" />
+                                </VBox>
+                            </HBox>
+
+                            <Separator style="-fx-background-color:#5B463A;" />
+
+                            <Button fx:id="ownerReviewStockButton" onAction="#showOwnerReviewStock" maxWidth="9999" prefHeight="42.0" text="Review Stock" />
+                            <Button fx:id="ownerReviewMenuButton" onAction="#showOwnerReviewMenu" maxWidth="9999" prefHeight="42.0" text="Review New Menu" />
+                            <Button fx:id="ownerReportButton" onAction="#showOwnerReport" maxWidth="9999" prefHeight="42.0" text="View Report" />
+                            <Button fx:id="ownerLogoutButton" onAction="#handleOwnerLogout" maxWidth="9999" prefHeight="42.0" text="Logout"
+                                    style="-fx-background-color:#5B463A; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+                        </VBox>
+                    </left>
+
+                    <center>
+                        <StackPane style="-fx-background-color:#F7F2EA;">
+                            <VBox fx:id="ownerLoginPane" alignment="CENTER" spacing="18.0" style="-fx-background-color:#F7F2EA;">
+                                <VBox maxWidth="430.0" spacing="16.0" style="-fx-background-color:#FBF8F0; -fx-background-radius:18; -fx-border-color:#E5D8C8; -fx-border-radius:18; -fx-padding:34; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.08), 12, 0, 0, 3);">
+                                    <Label text="Owner Login" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+                                    <Label text="Enter owner password to review stock, new menus, and reports." wrapText="true" style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
+                                    <PasswordField fx:id="ownerPasswordField" promptText="Owner password" prefHeight="44.0"
+                                                   style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
+                                    <Button fx:id="ownerLoginButton" onAction="#handleOwnerLogin" text="Login as Owner" prefHeight="46.0" maxWidth="9999"
+                                            style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+                                    <Label fx:id="ownerLoginStatusLabel" text="Owner login is required." wrapText="true" style="-fx-text-fill:#6E655C; -fx-font-weight:bold;" />
+                                </VBox>
+                            </VBox>
+
+                            <StackPane fx:id="ownerContentPane" style="-fx-background-color:#F7F2EA;" />
+                        </StackPane>
+                    </center>
+                </BorderPane>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

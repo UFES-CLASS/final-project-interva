@@ -11,21 +11,15 @@ import java.net.URL;
 
 public class App extends Application {
 
-    private static Scene scene;
-
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("orders"), 1200, 700);
+        Scene scene = new Scene(loadFXML("main"), 1280, 760);
         stage.setTitle("Sambi Kopi POS");
         stage.setScene(scene);
         stage.show();
     }
 
-    public static void setRoot(String fxmlName) throws IOException {
-        scene.setRoot(loadFXML(cleanFxmlName(fxmlName)));
-    }
-
-    private static Parent loadFXML(String fxmlName) throws IOException {
+    public static Parent loadFXML(String fxmlName) throws IOException {
         String cleanName = cleanFxmlName(fxmlName);
         String resourcePath = "/interva/sambikopi/view/" + cleanName + ".fxml";
         URL fxmlUrl = App.class.getResource(resourcePath);
@@ -40,7 +34,7 @@ public class App extends Application {
 
     private static String cleanFxmlName(String fxmlName) {
         if (fxmlName == null || fxmlName.isBlank()) {
-            return "menu";
+            return "main";
         }
         return fxmlName.endsWith(".fxml")
                 ? fxmlName.substring(0, fxmlName.length() - 5)

@@ -4,26 +4,24 @@ import interva.sambikopi.model.CafeMenuItem;
 import interva.sambikopi.model.SambiKopiDataStore;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class MenuListController {
+public class OwnerReviewMenuController {
 
     @FXML private TextField searchField;
     @FXML private Label statusLabel;
-    @FXML private TableView<CafeMenuItem> menuTable;
+    @FXML private TableView<CafeMenuItem> menuReviewTable;
     @FXML private TableColumn<CafeMenuItem, String> colMenuName;
     @FXML private TableColumn<CafeMenuItem, String> colCategory;
     @FXML private TableColumn<CafeMenuItem, String> colPrice;
     @FXML private TableColumn<CafeMenuItem, String> colIngredients;
     @FXML private TableColumn<CafeMenuItem, String> colStatus;
 
-    private FilteredList<CafeMenuItem> filteredMenuData;
+    private FilteredList<CafeMenuItem> filteredData;
 
     @FXML
     private void initialize() {
@@ -33,64 +31,58 @@ public class MenuListController {
         colIngredients.setCellValueFactory(new PropertyValueFactory<>("ingredients"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        filteredMenuData = new FilteredList<>(SambiKopiDataStore.getMenuItems(), item -> true);
-        menuTable.setItems(filteredMenuData);
-        setStatus("Menu List ready.", false);
+        filteredData = new FilteredList<>(SambiKopiDataStore.getMenuReviewItems(), item -> true);
+        menuReviewTable.setItems(filteredData);
+
+        int count = SambiKopiDataStore.consumeOwnerMenuNotificationCount();
+        setStatus(count > 0 ? "New menu review request received: " + count + " item(s)." : "Review new menu requests from Barista.", false);
     }
 
     @FXML
     private void handleSearch() {
         String keyword = searchField.getText().trim().toLowerCase();
-        filteredMenuData.setPredicate(item -> keyword.isEmpty()
+        filteredData.setPredicate(item -> keyword.isEmpty()
                 || item.getMenuName().toLowerCase().contains(keyword)
                 || item.getCategory().toLowerCase().contains(keyword)
                 || item.getPrice().toLowerCase().contains(keyword)
                 || item.getIngredients().toLowerCase().contains(keyword)
                 || item.getStatus().toLowerCase().contains(keyword));
-        setStatus(keyword.isEmpty() ? "Showing all menu items." : "Search result for: " + keyword, false);
+        setStatus(keyword.isEmpty() ? "Showing all menu review requests." : "Search result for: " + keyword, false);
     }
 
     @FXML
     private void handleRefresh() {
         searchField.clear();
-        filteredMenuData.setPredicate(item -> true);
-        menuTable.getSelectionModel().clearSelection();
-        setStatus("Menu List refreshed.", false);
+        filteredData.setPredicate(item -> true);
+        menuReviewTable.refresh();
+        setStatus("Menu review refreshed.", false);
     }
 
     @FXML
-    private void handleDeleteSelected() {
-        CafeMenuItem selected = menuTable.getSelectionModel().getSelectedItem();
+    private void handleApproveMenu() {
+        CafeMenuItem selected = menuReviewTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            setStatus("Select a menu item first before deleting.", true);
+            setStatus("Select a menu item first.", true);
             return;
         }
-
-        SambiKopiDataStore.getMenuItems().remove(selected);
-        menuTable.getSelectionModel().clearSelection();
-        setStatus("Deleted menu item: " + selected.getMenuName(), false);
+        SambiKopiDataStore.approveMenuItem(selected);
+        menuReviewTable.getSelectionModel().clearSelection();
+        menuReviewTable.refresh();
+        setStatus("Approved menu item: " + selected.getMenuName(), false);
     }
 
     @FXML
-    private void handleDeleteAll() {
-        if (SambiKopiDataStore.getMenuItems().isEmpty()) {
-            setStatus("There are no menu items to delete.", true);
+    private void handleRejectMenu() {
+        CafeMenuItem selected = menuReviewTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            setStatus("Select a menu item first.", true);
             return;
         }
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Delete all menu items from the Menu List?",
-                ButtonType.YES, ButtonType.NO);
-        confirm.setTitle("Delete All Menu Items");
-        confirm.setHeaderText(null);
-
-        confirm.showAndWait().ifPresent(button -> {
-            if (button == ButtonType.YES) {
-                SambiKopiDataStore.getMenuItems().clear();
-                menuTable.getSelectionModel().clearSelection();
-                setStatus("All menu items have been deleted.", false);
-            }
-        });
+        String menuName = selected.getMenuName();
+        SambiKopiDataStore.rejectMenuItem(selected);
+        menuReviewTable.getSelectionModel().clearSelection();
+        menuReviewTable.refresh();
+        setStatus("Rejected and removed menu item: " + menuName, true);
     }
 
     private void setStatus(String message, boolean error) {

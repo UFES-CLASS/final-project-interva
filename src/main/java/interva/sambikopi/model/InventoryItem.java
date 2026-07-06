@@ -1,69 +1,58 @@
 package interva.sambikopi.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 public class InventoryItem {
 
-    private final StringProperty productName;
-    private final IntegerProperty stock;
-    private final StringProperty expDate;
-    private final StringProperty status;
+    private String product;
+    private int stock;
+    private String expDate;
+    private String status;
+    private String notifyStatus;
 
-    public InventoryItem(String productName, int stock, String expDate, String status) {
-        this.productName = new SimpleStringProperty(productName);
-        this.stock = new SimpleIntegerProperty(stock);
-        this.expDate = new SimpleStringProperty(expDate);
-        this.status = new SimpleStringProperty(status);
+    public InventoryItem(String product, int stock, String expDate, String status, String notifyStatus) {
+        this.product = product;
+        this.stock = stock;
+        this.expDate = expDate;
+        this.status = status;
+        this.notifyStatus = notifyStatus;
     }
 
-    public String getProductName() {
-        return productName.get();
+    public String getProduct() {
+        return product;
     }
 
-    public void setProductName(String productName) {
-        this.productName.set(productName);
-    }
-
-    public StringProperty productNameProperty() {
-        return productName;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
     public int getStock() {
-        return stock.get();
-    }
-
-    public void setStock(int stock) {
-        this.stock.set(stock);
-    }
-
-    public IntegerProperty stockProperty() {
         return stock;
     }
 
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     public String getExpDate() {
-        return expDate.get();
-    }
-
-    public void setExpDate(String expDate) {
-        this.expDate.set(expDate);
-    }
-
-    public StringProperty expDateProperty() {
         return expDate;
     }
 
+    public void setExpDate(String expDate) {
+        this.expDate = expDate;
+    }
+
     public String getStatus() {
-        return status.get();
+        return status;
     }
 
     public void setStatus(String status) {
-        this.status.set(status);
+        this.status = status;
     }
 
-    public StringProperty statusProperty() {
-        return status;
+    public String getNotifyStatus() {
+        return notifyStatus;
+    }
+
+    public void setNotifyStatus(String notifyStatus) {
+        this.notifyStatus = notifyStatus;
     }
 }
