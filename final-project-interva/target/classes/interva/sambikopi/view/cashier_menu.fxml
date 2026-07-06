@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="interva.sambikopi.controller.CashierMenuController"
+           prefWidth="1060.0"
+           prefHeight="730.0"
+           style="-fx-background-color:#F7F2EA; -fx-font-family:'Segoe UI';">
+
+    <HBox spacing="28.0">
+        <padding>
+            <Insets bottom="28.0" left="34.0" right="28.0" top="28.0" />
+        </padding>
+
+        <VBox spacing="20.0" prefWidth="610.0">
+            <VBox spacing="6.0">
+                <Label text="New order" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+                <Label text="Select menu items for the customer" style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
+            </VBox>
+
+            <HBox spacing="10.0">
+                <Button fx:id="allFilterButton" onAction="#handleAllFilter" text="All" prefHeight="32.0" prefWidth="58.0"
+                        style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:18;" />
+                <Button fx:id="coffeeFilterButton" onAction="#handleCoffeeFilter" text="Coffee" prefHeight="32.0" prefWidth="78.0"
+                        style="-fx-background-color:white; -fx-text-fill:#6E655C; -fx-font-weight:bold; -fx-background-radius:18;" />
+                <Button fx:id="nonCoffeeFilterButton" onAction="#handleNonCoffeeFilter" text="Non-Coffee" prefHeight="32.0" prefWidth="105.0"
+                        style="-fx-background-color:white; -fx-text-fill:#6E655C; -fx-font-weight:bold; -fx-background-radius:18;" />
+                <Button fx:id="pastryFilterButton" onAction="#handlePastryFilter" text="Pastry" prefHeight="32.0" prefWidth="75.0"
+                        style="-fx-background-color:white; -fx-text-fill:#6E655C; -fx-font-weight:bold; -fx-background-radius:18;" />
+            </HBox>
+
+            <FlowPane fx:id="menuCardsPane" hgap="18.0" vgap="18.0" prefWrapLength="560.0" />
+        </VBox>
+
+        <VBox prefWidth="350.0" spacing="18.0" style="-fx-background-color:#FBF8F0; -fx-border-color:#E5D8C8; -fx-border-width:0 0 0 1; -fx-padding:25;">
+            <VBox spacing="3.0">
+                <Label text="Sambi Kopi" style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+                <Label text="Jl. Kaliurang, Yogyakarta" style="-fx-text-fill:#8A8178;" />
+            </VBox>
+
+            <VBox spacing="6.0">
+                <Label text="CUSTOMER NAME" style="-fx-text-fill:#8A8178; -fx-font-size:12px; -fx-font-weight:bold;" />
+                <TextField fx:id="customerNameField" promptText="Enter customer name..." prefHeight="38.0"
+                           style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
+            </VBox>
+
+            <VBox spacing="5.0">
+                <HBox><Label text="Order ID" prefWidth="130.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="orderIdLabel" text="#0231" style="-fx-font-weight:bold;" /></HBox>
+                <HBox><Label text="Date" prefWidth="130.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="orderDateLabel" text="04 Jul 2026" style="-fx-font-weight:bold;" /></HBox>
+                <HBox><Label text="Time" prefWidth="130.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="orderTimeLabel" text="10:24 AM" style="-fx-font-weight:bold;" /></HBox>
+                <HBox><Label text="Cashier" prefWidth="130.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="cashierNameLabel" text="Nabila" style="-fx-font-weight:bold;" /></HBox>
+                <HBox><Label text="Payment" prefWidth="130.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="paymentMethodLabel" text="Card" style="-fx-font-weight:bold;" /></HBox>
+            </VBox>
+
+            <VBox fx:id="receiptItemsBox" spacing="8.0" prefHeight="150.0" style="-fx-border-color:#EFE2D2; -fx-border-width:1 0 1 0; -fx-padding:15 0 15 0;" />
+
+            <VBox spacing="7.0">
+                <HBox><Label text="Subtotal" prefWidth="180.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="subtotalLabel" text="Rp 0" /></HBox>
+                <HBox><Label text="Tax" prefWidth="180.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="taxLabel" text="Rp 0" /></HBox>
+                <HBox><Label text="Total" prefWidth="180.0" style="-fx-font-size:18px; -fx-font-weight:bold;" /><Label fx:id="totalLabel" text="Rp 0" style="-fx-font-size:18px; -fx-font-weight:bold;" /></HBox>
+            </VBox>
+
+            <VBox spacing="8.0">
+                <Label text="PAYMENT METHOD" style="-fx-text-fill:#8A8178; -fx-font-size:12px; -fx-font-weight:bold;" />
+                <HBox spacing="10.0">
+                    <Button fx:id="cashButton" onAction="#handlePaymentCash" text="Cash" prefHeight="42.0" prefWidth="90.0" />
+                    <Button fx:id="cardButton" onAction="#handlePaymentCard" text="Card" prefHeight="42.0" prefWidth="90.0" />
+                    <Button fx:id="qrisButton" onAction="#handlePaymentQris" text="QRIS" prefHeight="42.0" prefWidth="90.0" />
+                </HBox>
+            </VBox>
+
+            <Button fx:id="receivePaymentButton" onAction="#handleReceivePayment" text="Receive payment" prefHeight="48.0" maxWidth="9999" style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-font-size:15px; -fx-background-radius:10;" />
+
+            <Label fx:id="cashierStatusLabel" text="Cashier Menu ready." wrapText="true" style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
+        </VBox>
+    </HBox>
+
+    <VBox fx:id="confirmationOverlay" visible="false" managed="false" maxWidth="430.0" maxHeight="460.0" alignment="CENTER" spacing="18.0" style="-fx-background-color:white; -fx-background-radius:16; -fx-padding:30; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.30), 22, 0, 0, 5);">
+        <Label text=" " prefWidth="64.0" prefHeight="64.0" style="-fx-background-color:#DDF2DD; -fx-background-radius:35;" />
+        <Label text="Order confirmed" style="-fx-font-size:22px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+        <Label text="Please prepare and serve the coffee to the customer. This order has been sent to the Barista Orders page." wrapText="true" alignment="CENTER" style="-fx-text-fill:#6E655C; -fx-font-size:14px;" />
+
+        <VBox spacing="6.0" style="-fx-border-color:#EFE2D2; -fx-border-width:1 0 1 0; -fx-padding:16 0 16 0;">
+            <Label text="Sambi Kopi" style="-fx-font-size:17px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+            <Label text="Jl. Kaliurang, Yogyakarta" style="-fx-text-fill:#8A8178;" />
+            <HBox><Label text="Customer" prefWidth="170.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="confirmationCustomerLabel" text="Customer" style="-fx-font-weight:bold;" /></HBox>
+            <HBox><Label text="Order ID" prefWidth="170.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="confirmationOrderIdLabel" text="#0231" style="-fx-font-weight:bold;" /></HBox>
+            <HBox><Label text="Date" prefWidth="170.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="confirmationDateLabel" text="04 Jul 2026" style="-fx-font-weight:bold;" /></HBox>
+            <HBox><Label text="Cashier" prefWidth="170.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="confirmationCashierLabel" text="Nabila" style="-fx-font-weight:bold;" /></HBox>
+            <HBox><Label text="Total paid" prefWidth="170.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="confirmationTotalLabel" text="Rp 0" style="-fx-font-weight:bold;" /></HBox>
+        </VBox>
+
+        <HBox spacing="12.0">
+            <Button fx:id="printReceiptButton" onAction="#handlePrintReceipt" text="Print receipt" prefHeight="44.0" prefWidth="140.0" style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-text-fill:#2D1B14; -fx-font-weight:bold; -fx-background-radius:10; -fx-border-radius:10;" />
+            <Button fx:id="newOrderButton" onAction="#handleNewOrder" text="New order" prefHeight="44.0" prefWidth="140.0" style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+        </HBox>
+    </VBox>
+</StackPane>

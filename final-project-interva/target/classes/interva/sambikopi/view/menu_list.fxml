@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="interva.sambikopi.controller.MenuListController"
+      spacing="22.0"
+      style="-fx-background-color:#F7F2EA; -fx-font-family:'Segoe UI';">
+
+    <padding>
+        <Insets bottom="35.0" left="36.0" right="36.0" top="35.0" />
+    </padding>
+
+    <VBox spacing="6.0">
+        <Label text="Menu List" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+        <Label text="View saved menu data from the Barista Menu input page." style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
+    </VBox>
+
+    <HBox spacing="12.0">
+        <TextField fx:id="searchField" promptText="Search menu name, category, or status..." prefHeight="42.0" prefWidth="430.0"
+                   style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
+        <Button fx:id="searchButton" onAction="#handleSearch" text="Search" prefHeight="42.0" prefWidth="100.0"
+                style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
+        <Button fx:id="refreshButton" onAction="#handleRefresh" text="Refresh" prefHeight="42.0" prefWidth="100.0"
+                style="-fx-background-color:white; -fx-border-color:#D8B89A; -fx-text-fill:#2D1B14; -fx-font-weight:bold; -fx-background-radius:9; -fx-border-radius:9;" />
+        <Button fx:id="deleteButton" onAction="#handleDeleteSelected" text="Delete" prefHeight="42.0" prefWidth="100.0"
+                style="-fx-background-color:#B04A34; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
+        <Button fx:id="deleteAllButton" onAction="#handleDeleteAll" text="Delete All" prefHeight="42.0" prefWidth="120.0"
+                style="-fx-background-color:#B04A34; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
+    </HBox>
+
+    <Label fx:id="statusLabel" text="Menu List ready." style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
+
+    <TableView fx:id="menuTable" prefHeight="430.0" prefWidth="980.0"
+               style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:12; -fx-background-radius:12;">
+        <columns>
+            <TableColumn fx:id="colMenuName" text="MENU NAME" prefWidth="230.0" />
+            <TableColumn fx:id="colCategory" text="CATEGORY" prefWidth="170.0" />
+            <TableColumn fx:id="colPrice" text="PRICE" prefWidth="130.0" />
+            <TableColumn fx:id="colIngredients" text="INGREDIENTS" prefWidth="300.0" />
+            <TableColumn fx:id="colStatus" text="STATUS" prefWidth="160.0" />
+        </columns>
+    </TableView>
+</VBox>
