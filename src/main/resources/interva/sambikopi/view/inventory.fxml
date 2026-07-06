@@ -31,6 +31,8 @@
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
             <Button fx:id="menuButton" onAction="#handleOpenMenu" maxWidth="9999" text="Menu"
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
+            <Button fx:id="menuListButton" onAction="#handleOpenMenuList" maxWidth="9999" text="Menu List"
+                    style="-fx-background-color:transparent; -fx-text-fill:white;" />
             <Button fx:id="inventoryButton" onAction="#handleOpenInventory" maxWidth="9999" text="Inventory"
                     style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-background-radius:10;" />
             <Button fx:id="ordersButton" onAction="#handleOpenOrders" maxWidth="9999" text="Orders"

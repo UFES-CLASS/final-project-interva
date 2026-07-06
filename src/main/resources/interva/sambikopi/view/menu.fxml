@@ -5,8 +5,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -32,6 +30,8 @@
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
             <Button fx:id="menuButton" onAction="#handleOpenMenu" maxWidth="9999" text="Menu"
                     style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-background-radius:10;" />
+            <Button fx:id="menuListButton" onAction="#handleOpenMenuList" maxWidth="9999" text="Menu List"
+                    style="-fx-background-color:transparent; -fx-text-fill:white;" />
             <Button fx:id="inventoryButton" onAction="#handleOpenInventory" maxWidth="9999" text="Inventory"
                     style="-fx-background-color:transparent; -fx-text-fill:white;" />
             <Button fx:id="ordersButton" onAction="#handleOpenOrders" maxWidth="9999" text="Orders"
@@ -40,14 +40,15 @@
     </left>
 
     <center>
-        <VBox spacing="16.0">
+        <VBox spacing="18.0">
             <padding>
-                <Insets bottom="30.0" left="35.0" right="35.0" top="30.0" />
+                <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
             </padding>
 
             <VBox spacing="5.0">
                 <Label text="Add New Menu" style="-fx-font-size:34px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-                <Label text="Fix the flagged fields, then confirm again." style="-fx-text-fill:#666666; -fx-font-size:15px;" />
+                <Label text="Input menu data here. Saved data will be shown on the Menu List page."
+                       style="-fx-text-fill:#666666; -fx-font-size:15px;" />
             </VBox>
 
             <HBox fx:id="messageBox" alignment="CENTER" spacing="10.0"
@@ -55,64 +56,44 @@
                 <padding>
                     <Insets bottom="12.0" left="15.0" right="15.0" top="12.0" />
                 </padding>
-                <Label fx:id="messageLabel" maxWidth="9999" text="Fill the menu data, then confirm again."
+                <Label fx:id="messageLabel" maxWidth="9999" text="Input a new menu item here. Saved data will appear on the Menu List page."
                        alignment="CENTER" wrapText="true" style="-fx-text-fill:#4F8B45; -fx-font-weight:bold; -fx-alignment:center;" />
             </HBox>
 
-            <HBox spacing="15.0">
+            <VBox spacing="18.0" maxWidth="760.0">
                 <VBox spacing="5.0">
                     <Label text="MENU NAME" style="-fx-font-weight:bold;" />
-                    <TextField fx:id="menuNameField" prefHeight="42.0" prefWidth="330.0" promptText="Kopi Milk Gula Aren"
+                    <TextField fx:id="menuNameField" prefHeight="42.0" promptText="Kopi Milk Gula Aren"
                                style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
                 </VBox>
 
-                <VBox spacing="5.0">
-                    <Label text="CATEGORY" style="-fx-font-weight:bold;" />
-                    <ComboBox fx:id="categoryComboBox" prefHeight="42.0" prefWidth="260.0" promptText="Beverage - Coffee"
-                              style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
-                </VBox>
+                <HBox spacing="15.0">
+                    <VBox spacing="5.0">
+                        <Label text="CATEGORY" style="-fx-font-weight:bold;" />
+                        <ComboBox fx:id="categoryComboBox" prefHeight="42.0" prefWidth="360.0" promptText="Beverage - Coffee"
+                                  style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
+                    </VBox>
+
+                    <VBox spacing="5.0">
+                        <Label text="PRICE (IDR)" style="-fx-font-weight:bold;" />
+                        <TextField fx:id="priceField" prefHeight="42.0" prefWidth="180.0" promptText="18000"
+                                   style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
+                    </VBox>
+                </HBox>
 
                 <VBox spacing="5.0">
-                    <Label text="PRICE (IDR)" style="-fx-font-weight:bold;" />
-                    <TextField fx:id="priceField" prefHeight="42.0" prefWidth="140.0" promptText="18000"
-                               style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
+                    <Label text="INGREDIENTS" style="-fx-font-weight:bold; -fx-text-fill:#C65D42;" />
+                    <TextField fx:id="ingredientsField" prefHeight="42.0" promptText="Milk, Coffee, Palm Sugar"
+                               style="-fx-background-color:white; -fx-border-color:#C65D42; -fx-border-radius:8; -fx-background-radius:8;" />
                 </VBox>
-            </HBox>
 
-            <VBox spacing="5.0">
-                <Label text="INGREDIENTS" style="-fx-font-weight:bold; -fx-text-fill:#C65D42;" />
-                <TextField fx:id="ingredientsField" prefHeight="42.0" promptText="Milk, Coffee, Palm Sugar"
-                           style="-fx-background-color:white; -fx-border-color:#C65D42; -fx-border-radius:8; -fx-background-radius:8;" />
+                <HBox spacing="12.0">
+                    <Button fx:id="saveMenuButton" onAction="#handleSaveMenu" prefHeight="42.0" prefWidth="160.0" text="Save Menu"
+                            style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+                    <Button fx:id="clearButton" onAction="#handleClearForm" prefHeight="42.0" prefWidth="120.0" text="Clear"
+                            style="-fx-background-color:white; -fx-border-color:#DDDDDD; -fx-background-radius:10; -fx-border-radius:10;" />
+                </HBox>
             </VBox>
-
-            <HBox spacing="12.0">
-                <Button fx:id="confirmAgainButton" onAction="#handleConfirmAgain" prefHeight="42.0" prefWidth="160.0" text="Confirm Again"
-                        style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
-                <Button fx:id="cancelButton" onAction="#handleCancel" prefHeight="42.0" prefWidth="110.0" text="Cancel"
-                        style="-fx-background-color:white; -fx-border-color:#DDDDDD; -fx-background-radius:10; -fx-border-radius:10;" />
-                <Button fx:id="deleteMenuButton" onAction="#handleDeleteMenu" prefHeight="42.0" prefWidth="120.0" text="Delete"
-                        style="-fx-background-color:#D94141; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
-            </HBox>
-
-            <HBox spacing="10.0">
-                <TextField fx:id="menuSearchField" prefWidth="250.0" promptText="Search menu..."
-                           style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:8; -fx-background-radius:8;" />
-                <Button fx:id="menuSearchButton" onAction="#handleSearchMenu" text="Search"
-                        style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:8;" />
-                <Button fx:id="refreshMenuButton" onAction="#handleRefreshMenu" text="Refresh"
-                        style="-fx-background-color:white; -fx-border-color:#C96B43; -fx-text-fill:#C96B43; -fx-border-radius:8; -fx-background-radius:8;" />
-            </HBox>
-
-            <TableView fx:id="menuTable" prefHeight="250.0"
-                       style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:10; -fx-background-radius:10;">
-                <columns>
-                    <TableColumn fx:id="menuNameColumn" prefWidth="230.0" text="MENU NAME" />
-                    <TableColumn fx:id="categoryColumn" prefWidth="200.0" text="CATEGORY" />
-                    <TableColumn fx:id="priceColumn" prefWidth="100.0" text="PRICE (IDR)" />
-                    <TableColumn fx:id="ingredientsColumn" prefWidth="260.0" text="INGREDIENTS" />
-                    <TableColumn fx:id="statusColumn" prefWidth="160.0" text="STATUS" />
-                </columns>
-            </TableView>
         </VBox>
     </center>
 </BorderPane>

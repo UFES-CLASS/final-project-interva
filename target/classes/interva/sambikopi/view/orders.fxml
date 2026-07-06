@@ -33,6 +33,8 @@
                         style="-fx-font-family:Georgia; -fx-font-size:16px; -fx-background-color:#F4F1EA; -fx-text-fill:#2E241D; -fx-background-radius:8; -fx-border-radius:8;" />
                 <Button fx:id="menuButton" onAction="#handleOpenMenu" maxWidth="9999" prefHeight="45.0" text="MENU"
                         style="-fx-font-family:Georgia; -fx-font-size:16px; -fx-background-color:#F4F1EA; -fx-text-fill:#2E241D; -fx-background-radius:8; -fx-border-radius:8;" />
+                <Button fx:id="menuListButton" onAction="#handleOpenMenuList" maxWidth="9999" prefHeight="45.0" text="MENU LIST"
+                        style="-fx-font-family:Georgia; -fx-font-size:16px; -fx-background-color:#F4F1EA; -fx-text-fill:#2E241D; -fx-background-radius:8; -fx-border-radius:8;" />
                 <Button fx:id="inventoryButton" onAction="#handleOpenInventory" maxWidth="9999" prefHeight="45.0" text="INVENTORY"
                         style="-fx-font-family:Georgia; -fx-font-size:16px; -fx-background-color:#F4F1EA; -fx-text-fill:#2E241D; -fx-background-radius:8; -fx-border-radius:8;" />
                 <Button fx:id="ordersButton" onAction="#handleOpenOrders" maxWidth="9999" prefHeight="45.0" text="ORDERS"
@@ -63,8 +65,8 @@
                     <Button fx:id="refreshOrderButton" onAction="#handleRefreshOrders" prefHeight="44.0" prefWidth="92.0" text="Refresh"
                             style="-fx-background-color:#F4F1EA; -fx-border-color:#A79E91; -fx-text-fill:#2E241D; -fx-border-radius:8; -fx-background-radius:8;" />
 
-                    <Button fx:id="orderPanelButton" onAction="#handleShowOrderPanel" prefHeight="44.0" prefWidth="145.0" text="Orders"
-                            style="-fx-background-color:#D9A382; -fx-text-fill:#4C3426; -fx-font-size:13px; -fx-font-weight:bold; -fx-background-radius:8;" />
+                    <Button fx:id="addOrderButton" onAction="#handleShowAddOrderPanel" prefHeight="44.0" prefWidth="145.0" text="Add Order"
+                            style="-fx-background-color:#D9A382; -fx-text-fill:white; -fx-font-size:13px; -fx-font-weight:bold; -fx-background-radius:8;" />
                 </HBox>
 
                 <Label fx:id="orderStatusLabel" text="Orders page ready."
@@ -93,7 +95,7 @@
         </center>
     </BorderPane>
 
-    <VBox fx:id="orderPopupPane" visible="false" managed="false" prefWidth="540.0" maxWidth="540.0" prefHeight="365.0" maxHeight="365.0"
+    <VBox fx:id="incomingOrderPane" visible="false" managed="false" prefWidth="560.0" maxWidth="560.0" prefHeight="330.0" maxHeight="330.0"
           StackPane.alignment="CENTER_RIGHT"
           style="-fx-background-color:#E0A27E; -fx-border-color:#5B463A; -fx-border-radius:10; -fx-background-radius:10; -fx-effect:dropshadow(three-pass-box, rgba(46,36,29,0.25), 16, 0, 0, 4);">
         <padding>
@@ -101,37 +103,32 @@
         </padding>
 
         <HBox spacing="12.0" style="-fx-border-color:#5B463A; -fx-border-width:0 0 1 0; -fx-padding:0 0 12 0;">
-            <Label text="Filters" style="-fx-text-fill:#5B463A; -fx-font-weight:bold;" />
-            <Label text="ORDERS" style="-fx-text-fill:#4C3426; -fx-font-size:14px; -fx-font-weight:bold;" />
+            <Label text="INCOMING ORDER" style="-fx-text-fill:#2E241D; -fx-font-size:15px; -fx-font-weight:bold;" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="closeOrderPanelButton" onAction="#handleHideOrderPanel" text="Back"
+            <Button fx:id="closeIncomingOrderButton" onAction="#handleHideIncomingOrderPanel" text="Back"
                     style="-fx-background-color:transparent; -fx-text-fill:#2E241D; -fx-font-weight:bold; -fx-font-size:15px;" />
         </HBox>
 
         <HBox spacing="14.0" style="-fx-padding:16 0 12 0; -fx-border-color:#6E655C; -fx-border-width:0 0 1 0;">
-            <Label fx:id="popupOrderIdLabel" prefWidth="95.0" text="09213-AB" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
-            <Label fx:id="popupCustomerLabel" prefWidth="105.0" text="Neon Sylvon" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
-            <Label fx:id="popupProductLabel" prefWidth="115.0" text="Mineral Water" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
-            <Label fx:id="popupDateLabel" prefWidth="120.0" text="16 January 2028" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
-            <Button fx:id="popupCompleteButton" onAction="#handlePopupComplete" prefWidth="38.0" text="OK"
-                    style="-fx-background-color:#83D982; -fx-text-fill:#1F3B20; -fx-font-weight:bold; -fx-background-radius:18;" />
-            <Button fx:id="popupCancelButton" onAction="#handlePopupCancel" prefWidth="38.0" text="X"
-                    style="-fx-background-color:#EA6B78; -fx-text-fill:#2E241D; -fx-font-weight:bold; -fx-background-radius:18;" />
+            <Label fx:id="incomingOrderIdLabel" prefWidth="95.0" text="09213-AB" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
+            <Label fx:id="incomingCustomerLabel" prefWidth="105.0" text="Neon Sylvon" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
+            <Label fx:id="incomingProductLabel" prefWidth="115.0" text="Mineral Water" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
+            <Label fx:id="incomingDateLabel" prefWidth="130.0" text="16 January 2028" style="-fx-text-fill:#1F1712; -fx-font-weight:bold;" />
         </HBox>
 
-        <VBox spacing="0" style="-fx-padding:12 0 0 0;">
-            <HBox spacing="20" style="-fx-padding:12 0 12 0; -fx-border-color:rgba(91,70,58,0.25); -fx-border-width:0 0 1 0;">
-                <Label text="Espresso Con Panna" prefWidth="230" style="-fx-text-fill:rgba(46,36,29,0.45);" />
-                <Label text="16 January 2028" prefWidth="150" style="-fx-text-fill:rgba(46,36,29,0.45);" />
-                <Label text="Complete" style="-fx-background-color:rgba(244,241,234,0.35); -fx-background-radius:12; -fx-padding:4 12 4 12; -fx-text-fill:rgba(46,36,29,0.45);" />
+        <VBox spacing="14.0" style="-fx-padding:18 0 0 0;">
+            <Label fx:id="incomingStatusLabel" text="Incoming order. Accept to add it to the order list."
+                   wrapText="true" style="-fx-text-fill:#5B463A; -fx-font-weight:bold;" />
+
+            <HBox spacing="14.0">
+                <Button fx:id="acceptIncomingOrderButton" onAction="#handleAcceptIncomingOrder" prefHeight="42.0" prefWidth="130.0" text="Accept"
+                        style="-fx-background-color:#7D9B76; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:20;" />
+                <Button fx:id="rejectIncomingOrderButton" onAction="#handleRejectIncomingOrder" prefHeight="42.0" prefWidth="130.0" text="Reject"
+                        style="-fx-background-color:#C98D88; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:20;" />
             </HBox>
-            <HBox spacing="20" style="-fx-padding:12 0 12 0; -fx-border-color:rgba(91,70,58,0.25); -fx-border-width:0 0 1 0;">
-                <Label text="Milkshake Vanilla" prefWidth="230" style="-fx-text-fill:rgba(46,36,29,0.45);" />
-                <Label text="16 January 2028" prefWidth="150" style="-fx-text-fill:rgba(46,36,29,0.45);" />
-                <Label text="Assigned" style="-fx-background-color:rgba(244,241,234,0.35); -fx-background-radius:12; -fx-padding:4 12 4 12; -fx-text-fill:rgba(46,36,29,0.45);" />
-            </HBox>
-            <Label fx:id="popupStatusLabel" text="Select an order, then complete or cancel it here."
-                   style="-fx-padding:20 0 0 0; -fx-text-fill:#5B463A; -fx-font-weight:bold;" />
+
+            <Label text="After accepting, the order will be saved into the table with Waiting status."
+                   wrapText="true" style="-fx-text-fill:rgba(46,36,29,0.65);" />
         </VBox>
     </VBox>
 </StackPane>

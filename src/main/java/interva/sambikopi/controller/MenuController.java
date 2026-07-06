@@ -2,18 +2,15 @@ package interva.sambikopi.controller;
 
 import interva.sambikopi.App;
 import interva.sambikopi.model.CafeMenuItem;
+import interva.sambikopi.model.SambiKopiDataStore;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
@@ -24,6 +21,7 @@ public class MenuController {
 
     @FXML private Button dashboardButton;
     @FXML private Button menuButton;
+    @FXML private Button menuListButton;
     @FXML private Button inventoryButton;
     @FXML private Button ordersButton;
 
@@ -33,22 +31,8 @@ public class MenuController {
     @FXML private ComboBox<String> categoryComboBox;
     @FXML private TextField priceField;
     @FXML private TextField ingredientsField;
-    @FXML private Button confirmAgainButton;
-    @FXML private Button cancelButton;
-    @FXML private Button deleteMenuButton;
-
-    @FXML private TextField menuSearchField;
-    @FXML private Button menuSearchButton;
-    @FXML private Button refreshMenuButton;
-    @FXML private TableView<CafeMenuItem> menuTable;
-    @FXML private TableColumn<CafeMenuItem, String> menuNameColumn;
-    @FXML private TableColumn<CafeMenuItem, String> categoryColumn;
-    @FXML private TableColumn<CafeMenuItem, String> priceColumn;
-    @FXML private TableColumn<CafeMenuItem, String> ingredientsColumn;
-    @FXML private TableColumn<CafeMenuItem, String> statusColumn;
-
-    private final ObservableList<CafeMenuItem> masterMenuData = FXCollections.observableArrayList();
-    private FilteredList<CafeMenuItem> filteredMenuData;
+    @FXML private Button saveMenuButton;
+    @FXML private Button clearButton;
 
     @FXML
     private void initialize() {
@@ -60,60 +44,11 @@ public class MenuController {
                 "Dessert"
         ));
 
-        menuNameColumn.setCellValueFactory(new PropertyValueFactory<>("menuName"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        ingredientsColumn.setCellValueFactory(new PropertyValueFactory<>("ingredients"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        masterMenuData.addAll(
-                new CafeMenuItem("Kopi Milk Gula Aren", "Beverage - Coffee", formatToIdr("18000"), "Milk, Coffee, Palm Sugar", "Pending Approval"),
-                new CafeMenuItem("Americano", "Beverage - Coffee", formatToIdr("15000"), "Espresso, Water", "Approved"),
-                new CafeMenuItem("Matcha Latte", "Beverage - Non Coffee", formatToIdr("22000"), "Matcha, Milk, Sugar", "Approved"),
-                new CafeMenuItem("Almond Croissant", "Pastry", formatToIdr("25000"), "Flour, Butter, Almond", "Pending Approval")
-        );
-
-        filteredMenuData = new FilteredList<>(masterMenuData, item -> true);
-        menuTable.setItems(filteredMenuData);
-
-        menuTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, selected) -> {
-            if (selected != null) {
-                fillForm(selected);
-            }
-        });
-
-        setMessage("Fill the menu data, then confirm again.", false);
+        setMessage("Input a new menu item here. Saved data will appear on the Menu List page.", false);
     }
 
     @FXML
-    private void handleSearchMenu() {
-        String keyword = menuSearchField.getText().trim().toLowerCase();
-
-        filteredMenuData.setPredicate(item -> {
-            if (keyword.isEmpty()) {
-                return true;
-            }
-
-            return item.getMenuName().toLowerCase().contains(keyword)
-                    || item.getCategory().toLowerCase().contains(keyword)
-                    || item.getPrice().toLowerCase().contains(keyword)
-                    || item.getStatus().toLowerCase().contains(keyword);
-        });
-
-        setMessage(keyword.isEmpty() ? "Showing all menu items." : "Search result for: " + keyword, false);
-    }
-
-    @FXML
-    private void handleRefreshMenu() {
-        menuSearchField.clear();
-        filteredMenuData.setPredicate(item -> true);
-        menuTable.getSelectionModel().clearSelection();
-        clearForm();
-        setMessage("Menu list refreshed.", false);
-    }
-
-    @FXML
-    private void handleConfirmAgain() {
+    private void handleSaveMenu() {
         String menuName = menuNameField.getText().trim();
         String category = categoryComboBox.getValue();
         String price = priceField.getText().trim();
@@ -134,59 +69,38 @@ public class MenuController {
             return;
         }
 
-        price = formatToIdr(price);
-
         if (ingredients.isEmpty()) {
-            setMessage("Incomplete data. Ingredients wajib diisi minimal 1 item sebelum menu bisa divalidasi.", true);
+            setMessage("Ingredients must be filled before the menu can be saved.", true);
             return;
         }
 
-        CafeMenuItem selected = menuTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            masterMenuData.add(new CafeMenuItem(menuName, category, price, ingredients, "Pending Approval"));
-            setMessage("New menu added: " + menuName, false);
-        } else {
-            selected.setMenuName(menuName);
-            selected.setCategory(category);
-            selected.setPrice(price);
-            selected.setIngredients(ingredients);
-            selected.setStatus("Pending Approval");
-            menuTable.refresh();
-            setMessage("Menu updated: " + menuName, false);
-        }
+        String formattedPrice = formatToIdr(price);
+        CafeMenuItem newItem = new CafeMenuItem(menuName, category, formattedPrice, ingredients, "Pending Approval");
+        SambiKopiDataStore.getMenuItems().add(newItem);
 
         clearForm();
-        menuTable.getSelectionModel().clearSelection();
+        setMessage("Menu saved: " + menuName + ". Open Menu List to see the table data.", false);
     }
 
     @FXML
-    private void handleCancel() {
+    private void handleClearForm() {
         clearForm();
-        menuTable.getSelectionModel().clearSelection();
-        setMessage("Input cancelled.", false);
-    }
-
-    @FXML
-    private void handleDeleteMenu() {
-        CafeMenuItem selected = menuTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            setMessage("Select a menu item from the table first.", true);
-            return;
-        }
-
-        masterMenuData.remove(selected);
-        clearForm();
-        setMessage("Menu deleted: " + selected.getMenuName(), false);
+        setMessage("Form cleared.", false);
     }
 
     @FXML
     private void handleOpenDashboard() {
-        showInfo("Dashboard", "Dashboard page is not created yet.");
+        showInfo("Dashboard", "Dashboard page is still under development.");
     }
 
     @FXML
     private void handleOpenMenu() throws IOException {
         App.setRoot("menu.fxml");
+    }
+
+    @FXML
+    private void handleOpenMenuList() throws IOException {
+        App.setRoot("menu_list.fxml");
     }
 
     @FXML
@@ -197,14 +111,6 @@ public class MenuController {
     @FXML
     private void handleOpenOrders() throws IOException {
         App.setRoot("orders.fxml");
-    }
-
-    private void fillForm(CafeMenuItem item) {
-        menuNameField.setText(item.getMenuName());
-        categoryComboBox.setValue(item.getCategory());
-        priceField.setText(item.getPrice());
-        ingredientsField.setText(item.getIngredients());
-        setMessage("Editing selected menu: " + item.getMenuName(), false);
     }
 
     private void clearForm() {
@@ -260,6 +166,9 @@ public class MenuController {
     }
 
     private void showInfo(String title, String message) {
-        new Alert(Alert.AlertType.INFORMATION, message).showAndWait();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.showAndWait();
     }
 }

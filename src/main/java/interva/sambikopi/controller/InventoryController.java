@@ -27,6 +27,7 @@ public class InventoryController {
     @FXML private Button dashboardButton;
     @FXML private Button inventoryButton;
     @FXML private Button menuButton;
+    @FXML private Button menuListButton;
     @FXML private Button ordersButton;
 
     @FXML private TextField inventorySearchField;
@@ -193,6 +194,11 @@ public class InventoryController {
     @FXML
     private void handleOpenMenu() throws IOException {
         App.setRoot("menu.fxml");
+    }
+
+    @FXML
+    private void handleOpenMenuList() throws IOException {
+        App.setRoot("menu_list.fxml");
     }
 
     @FXML

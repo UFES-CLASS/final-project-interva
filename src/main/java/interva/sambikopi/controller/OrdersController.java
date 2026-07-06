@@ -2,8 +2,7 @@ package interva.sambikopi.controller;
 
 import interva.sambikopi.App;
 import interva.sambikopi.model.OrderItem;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import interva.sambikopi.model.SambiKopiDataStore;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -22,6 +21,7 @@ public class OrdersController {
 
     @FXML private Button dashboardButton;
     @FXML private Button menuButton;
+    @FXML private Button menuListButton;
     @FXML private Button inventoryButton;
     @FXML private Button ordersButton;
 
@@ -34,16 +34,16 @@ public class OrdersController {
     @FXML private Button cancelOrderButton;
     @FXML private Label orderStatusLabel;
 
-    @FXML private Button orderPanelButton;
-    @FXML private VBox orderPopupPane;
-    @FXML private Button closeOrderPanelButton;
-    @FXML private Button popupCompleteButton;
-    @FXML private Button popupCancelButton;
-    @FXML private Label popupOrderIdLabel;
-    @FXML private Label popupCustomerLabel;
-    @FXML private Label popupProductLabel;
-    @FXML private Label popupDateLabel;
-    @FXML private Label popupStatusLabel;
+    @FXML private Button addOrderButton;
+    @FXML private VBox incomingOrderPane;
+    @FXML private Button closeIncomingOrderButton;
+    @FXML private Button acceptIncomingOrderButton;
+    @FXML private Button rejectIncomingOrderButton;
+    @FXML private Label incomingOrderIdLabel;
+    @FXML private Label incomingCustomerLabel;
+    @FXML private Label incomingProductLabel;
+    @FXML private Label incomingDateLabel;
+    @FXML private Label incomingStatusLabel;
 
     @FXML private TableView<OrderItem> orderTable;
     @FXML private TableColumn<OrderItem, String> orderIdColumn;
@@ -52,10 +52,9 @@ public class OrdersController {
     @FXML private TableColumn<OrderItem, String> creationDateColumn;
     @FXML private TableColumn<OrderItem, String> orderStatusColumn;
 
-    private final ObservableList<OrderItem> masterOrderData = FXCollections.observableArrayList();
     private FilteredList<OrderItem> filteredOrderData;
     private boolean activeOnlyFilter = false;
-    private OrderItem popupSelectedOrder;
+    private OrderItem incomingOrder;
 
     @FXML
     private void initialize() {
@@ -65,84 +64,63 @@ public class OrdersController {
         creationDateColumn.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        masterOrderData.addAll(
-                new OrderItem("00978-AB", "Thomas Tejo", "Espresso Con Panna", "16 January 2028", "Complete"),
-                new OrderItem("94741-AB", "Miks Yermolay", "Milkshake Vanilla", "16 January 2028", "Assigned"),
-                new OrderItem("09213-AB", "Neon Sylvon", "Mineral Water", "16 January 2028", "Waiting"),
-                new OrderItem("81220-AC", "Yamada Yoru", "Kopi Milk Gula Aren", "17 January 2028", "Assigned"),
-                new OrderItem("73014-BC", "Iso Yang", "Matcha Latte", "17 January 2028", "Waiting")
-        );
-
-        filteredOrderData = new FilteredList<>(masterOrderData, order -> true);
+        filteredOrderData = new FilteredList<>(SambiKopiDataStore.getOrders(), order -> true);
         orderTable.setItems(filteredOrderData);
 
         orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldOrder, selectedOrder) -> {
             if (selectedOrder != null) {
                 setStatus("Selected order: " + selectedOrder.getOrderId() + " - " + selectedOrder.getCustomer(), false);
-                if (orderPopupPane != null && orderPopupPane.isVisible()) {
-                    showOrderInPopup(selectedOrder);
-                }
             }
         });
 
         setStatus("Orders page ready.", false);
     }
 
-
     @FXML
-    private void handleShowOrderPanel() {
-        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
-
-        if (selected == null) {
-            selected = findFirstActiveOrder();
-        }
-        if (selected == null && !masterOrderData.isEmpty()) {
-            selected = masterOrderData.get(0);
-        }
-
-        if (selected == null) {
-            setStatus("No order data available.", true);
-            return;
-        }
-
-        orderTable.getSelectionModel().select(selected);
-        showOrderInPopup(selected);
-        orderPopupPane.setManaged(true);
-        orderPopupPane.setVisible(true);
-        setStatus("Order panel opened: " + selected.getOrderId(), false);
+    private void handleShowAddOrderPanel() {
+        incomingOrder = SambiKopiDataStore.createIncomingOrder();
+        showIncomingOrder(incomingOrder);
+        incomingOrderPane.setManaged(true);
+        incomingOrderPane.setVisible(true);
+        setStatus("New incoming order is ready to be accepted.", false);
     }
 
     @FXML
-    private void handleHideOrderPanel() {
-        orderPopupPane.setVisible(false);
-        orderPopupPane.setManaged(false);
-        setStatus("Order panel closed.", false);
+    private void handleHideIncomingOrderPanel() {
+        incomingOrderPane.setVisible(false);
+        incomingOrderPane.setManaged(false);
+        incomingOrder = null;
+        setStatus("Incoming order panel closed.", false);
     }
 
     @FXML
-    private void handlePopupComplete() {
-        if (popupSelectedOrder == null) {
-            popupStatusLabel.setText("No order selected.");
+    private void handleAcceptIncomingOrder() {
+        if (incomingOrder == null) {
+            incomingStatusLabel.setText("No incoming order to accept.");
             return;
         }
 
-        popupSelectedOrder.setStatus("Complete");
-        orderTable.refresh();
-        popupStatusLabel.setText("Completed: " + popupSelectedOrder.getOrderId());
-        setStatus("Order completed: " + popupSelectedOrder.getOrderId(), false);
+        SambiKopiDataStore.getOrders().add(incomingOrder);
+        orderTable.getSelectionModel().select(incomingOrder);
+        incomingStatusLabel.setText("Accepted: " + incomingOrder.getOrderId());
+        setStatus("Incoming order accepted: " + incomingOrder.getOrderId(), false);
+        incomingOrder = null;
+        incomingOrderPane.setVisible(false);
+        incomingOrderPane.setManaged(false);
     }
 
     @FXML
-    private void handlePopupCancel() {
-        if (popupSelectedOrder == null) {
-            popupStatusLabel.setText("No order selected.");
+    private void handleRejectIncomingOrder() {
+        if (incomingOrder == null) {
+            incomingStatusLabel.setText("No incoming order to reject.");
             return;
         }
 
-        popupSelectedOrder.setStatus("Cancelled");
-        orderTable.refresh();
-        popupStatusLabel.setText("Cancelled: " + popupSelectedOrder.getOrderId());
-        setStatus("Order cancelled: " + popupSelectedOrder.getOrderId(), true);
+        String rejectedId = incomingOrder.getOrderId();
+        incomingOrder = null;
+        incomingOrderPane.setVisible(false);
+        incomingOrderPane.setManaged(false);
+        setStatus("Incoming order rejected: " + rejectedId, true);
     }
 
     @FXML
@@ -220,6 +198,11 @@ public class OrdersController {
     }
 
     @FXML
+    private void handleOpenMenuList() throws IOException {
+        App.setRoot("menu_list.fxml");
+    }
+
+    @FXML
     private void handleOpenInventory() throws IOException {
         App.setRoot("inventory.fxml");
     }
@@ -229,24 +212,12 @@ public class OrdersController {
         App.setRoot("orders.fxml");
     }
 
-
-    private OrderItem findFirstActiveOrder() {
-        for (OrderItem order : masterOrderData) {
-            if (!order.getStatus().equalsIgnoreCase("Complete")
-                    && !order.getStatus().equalsIgnoreCase("Cancelled")) {
-                return order;
-            }
-        }
-        return null;
-    }
-
-    private void showOrderInPopup(OrderItem order) {
-        popupSelectedOrder = order;
-        popupOrderIdLabel.setText(order.getOrderId());
-        popupCustomerLabel.setText(order.getCustomer());
-        popupProductLabel.setText(order.getProduct());
-        popupDateLabel.setText(order.getCreationDate());
-        popupStatusLabel.setText("Current status: " + order.getStatus());
+    private void showIncomingOrder(OrderItem order) {
+        incomingOrderIdLabel.setText(order.getOrderId());
+        incomingCustomerLabel.setText(order.getCustomer());
+        incomingProductLabel.setText(order.getProduct());
+        incomingDateLabel.setText(order.getCreationDate());
+        incomingStatusLabel.setText("Incoming order. Accept to add it to the order list.");
     }
 
     private void applyFilters() {
