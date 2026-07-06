@@ -48,7 +48,7 @@ public class OrdersController {
         if (newOrders > 0) {
             setStatus("New cashier order received: " + newOrders + " order(s) waiting.", false);
         } else {
-            setStatus("Barista Orders ready.", false);
+            setStatus("Manage incoming cashier orders.", false);
         }
     }
 
@@ -96,7 +96,7 @@ public class OrdersController {
             setStatus("Select an order first.", true);
             return;
         }
-        selected.setStatus(status);
+        SambiKopiDataStore.updateOrderStatus(selected, status);
         orderTable.refresh();
         setStatus(successMessage + selected.getOrderId(), status.equals("Cancelled"));
     }

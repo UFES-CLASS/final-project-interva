@@ -58,6 +58,6 @@
         </HBox>
     </VBox>
 
-    <Label fx:id="statusLabel" text="Menu input page ready." wrapText="true"
+    <Label fx:id="statusLabel" text="Fill the menu form, then submit it for Owner review." wrapText="true"
            style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
 </VBox>

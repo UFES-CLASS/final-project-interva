@@ -37,7 +37,7 @@
                 style="-fx-background-color:#B04A34; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
     </HBox>
 
-    <Label fx:id="statusLabel" text="Menu List ready." style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
+    <Label fx:id="statusLabel" text="Search, review, or delete menu items from the database." style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
 
     <TableView fx:id="menuTable" prefHeight="430.0" prefWidth="980.0"
                style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:12; -fx-background-radius:12;">

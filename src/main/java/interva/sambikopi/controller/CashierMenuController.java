@@ -71,7 +71,7 @@ public class CashierMenuController {
         observeMenuItems();
         loadApprovedMenuCards();
         updateReceipt();
-        setStatus("Cashier Menu ready. Only Owner-approved menu items can be ordered.", false);
+        setStatus("Select approved menu items, then receive payment.", false);
     }
 
     @FXML private void handleAllFilter() { selectFilter(allFilterButton, "All", "Showing all approved menu items."); }

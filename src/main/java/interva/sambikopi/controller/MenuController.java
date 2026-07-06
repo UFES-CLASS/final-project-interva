@@ -19,7 +19,7 @@ public class MenuController {
     private void initialize() {
         categoryComboBox.getItems().setAll("Coffee", "Non-Coffee", "Pastry");
         categoryComboBox.getSelectionModel().select("Coffee");
-        setStatus("Menu input page ready. Fill the form, then save it to Menu List.", false);
+        setStatus("Fill the menu form, then submit it for Owner review.", false);
     }
 
     @FXML

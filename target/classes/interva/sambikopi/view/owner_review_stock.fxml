@@ -11,7 +11,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="interva.sambikopi.controller.StockController"
+      fx:controller="interva.sambikopi.controller.OwnerReviewStockController"
       spacing="22.0"
       style="-fx-background-color:#F7F2EA; -fx-font-family:'Segoe UI';">
 
@@ -20,22 +20,22 @@
     </padding>
 
     <VBox spacing="6.0">
-        <Label text="Stock" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-        <Label text="Check cafe inventory and notify owner about low or critical stock." style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
+        <Label text="Review Stock" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
+        <Label text="Review inventory notifications sent by the Barista." style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
     </VBox>
 
     <HBox spacing="12.0">
-        <TextField fx:id="stockSearchField" promptText="Search product, exp date, or status..." prefHeight="42.0" prefWidth="430.0"
+        <TextField fx:id="searchField" promptText="Search notified stock..." prefHeight="42.0" prefWidth="430.0"
                    style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
-        <Button fx:id="searchStockButton" onAction="#handleSearchStock" text="Search" prefHeight="42.0" prefWidth="100.0"
+        <Button fx:id="searchButton" onAction="#handleSearch" text="Search" prefHeight="42.0" prefWidth="100.0"
                 style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
-        <Button fx:id="refreshStockButton" onAction="#handleRefreshStock" text="Refresh" prefHeight="42.0" prefWidth="100.0"
+        <Button fx:id="refreshButton" onAction="#handleRefresh" text="Refresh" prefHeight="42.0" prefWidth="100.0"
                 style="-fx-background-color:white; -fx-border-color:#D8B89A; -fx-text-fill:#2D1B14; -fx-font-weight:bold; -fx-background-radius:9; -fx-border-radius:9;" />
     </HBox>
 
-    <Label fx:id="stockStatusLabel" text="Check stock levels and notify Owner if needed." wrapText="true" style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
+    <Label fx:id="statusLabel" text="Review stock notifications from Barista." wrapText="true" style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
 
-    <TableView fx:id="stockTable" prefHeight="430.0" prefWidth="980.0"
+    <TableView fx:id="stockReviewTable" prefHeight="430.0" prefWidth="980.0"
                style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:12; -fx-background-radius:12;">
         <columns>
             <TableColumn fx:id="colProduct" text="PRODUCT" prefWidth="270.0" />
@@ -47,9 +47,7 @@
     </TableView>
 
     <HBox spacing="14.0">
-        <Button fx:id="checkStockButton" onAction="#handleCheckStock" text="Check Stock" prefHeight="46.0" prefWidth="150.0"
+        <Button fx:id="markReviewedButton" onAction="#handleMarkReviewed" text="Mark Reviewed" prefHeight="46.0" prefWidth="170.0"
                 style="-fx-background-color:#7D9B76; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
-        <Button fx:id="notifyOwnerButton" onAction="#handleNotifyOwner" text="Notify Owner" prefHeight="46.0" prefWidth="160.0"
-                style="-fx-background-color:#C98963; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
     </HBox>
 </VBox>

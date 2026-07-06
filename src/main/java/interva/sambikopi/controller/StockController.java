@@ -33,7 +33,7 @@ public class StockController {
 
         filteredStockData = new FilteredList<>(SambiKopiDataStore.getInventoryItems(), item -> true);
         stockTable.setItems(filteredStockData);
-        setStatus("Stock page ready. Select low stock items, then notify owner if needed.", false);
+        setStatus("Check stock levels and notify Owner if needed.", false);
     }
 
     @FXML

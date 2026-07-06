@@ -38,7 +38,7 @@ public class CashierOrdersController {
 
         filteredOrders = new FilteredList<>(SambiKopiDataStore.getOrders(), order -> true);
         orderTable.setItems(filteredOrders);
-        setStatus("Cashier Orders ready.", false);
+        setStatus("View cashier order history.", false);
     }
 
     @FXML

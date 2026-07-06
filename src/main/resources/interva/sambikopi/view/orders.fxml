@@ -35,7 +35,7 @@
                 style="-fx-background-color:white; -fx-border-color:#D8B89A; -fx-text-fill:#2D1B14; -fx-font-weight:bold; -fx-background-radius:9; -fx-border-radius:9;" />
     </HBox>
 
-    <Label fx:id="orderStatusLabel" text="Barista Orders ready." wrapText="true" style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
+    <Label fx:id="orderStatusLabel" text="Manage incoming cashier orders." wrapText="true" style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
 
     <TableView fx:id="orderTable" prefHeight="400.0" prefWidth="980.0"
                style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:12; -fx-background-radius:12;">

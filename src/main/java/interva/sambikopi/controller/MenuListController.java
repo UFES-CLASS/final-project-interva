@@ -35,7 +35,7 @@ public class MenuListController {
 
         filteredMenuData = new FilteredList<>(SambiKopiDataStore.getMenuItems(), item -> true);
         menuTable.setItems(filteredMenuData);
-        setStatus("Menu List ready.", false);
+        setStatus("Search, review, or delete menu items from the database.", false);
     }
 
     @FXML
@@ -66,7 +66,7 @@ public class MenuListController {
             return;
         }
 
-        SambiKopiDataStore.getMenuItems().remove(selected);
+        SambiKopiDataStore.deleteMenuItem(selected);
         menuTable.getSelectionModel().clearSelection();
         setStatus("Deleted menu item: " + selected.getMenuName(), false);
     }
@@ -86,7 +86,7 @@ public class MenuListController {
 
         confirm.showAndWait().ifPresent(button -> {
             if (button == ButtonType.YES) {
-                SambiKopiDataStore.getMenuItems().clear();
+                SambiKopiDataStore.deleteAllMenuItems();
                 menuTable.getSelectionModel().clearSelection();
                 setStatus("All menu items have been deleted.", false);
             }
