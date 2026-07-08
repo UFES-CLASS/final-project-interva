@@ -2,6 +2,7 @@ package interva.sambikopi.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -27,7 +28,8 @@ public final class DatabaseManager {
                             category TEXT NOT NULL,
                             price TEXT NOT NULL,
                             ingredients TEXT NOT NULL,
-                            status TEXT NOT NULL
+                            status TEXT NOT NULL,
+                            image_path TEXT NOT NULL DEFAULT 'assets/menu/default.png'
                         )
                         """);
 
@@ -38,6 +40,17 @@ public final class DatabaseManager {
                             exp_date TEXT NOT NULL,
                             status TEXT NOT NULL,
                             notify_status TEXT NOT NULL
+                        )
+                        """);
+
+                statement.execute("""
+                        CREATE TABLE IF NOT EXISTS menu_ingredients (
+                            menu_name TEXT NOT NULL,
+                            stock_product TEXT NOT NULL,
+                            quantity INTEGER NOT NULL,
+                            PRIMARY KEY(menu_name, stock_product),
+                            FOREIGN KEY(menu_name) REFERENCES menu_items(menu_name) ON DELETE CASCADE,
+                            FOREIGN KEY(stock_product) REFERENCES inventory_items(product) ON UPDATE CASCADE
                         )
                         """);
 
@@ -59,9 +72,26 @@ public final class DatabaseManager {
                             setting_value TEXT NOT NULL
                         )
                         """);
+
+                addColumnIfMissing(connection, "menu_items", "image_path", "TEXT NOT NULL DEFAULT 'assets/menu/default.png'");
             }
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException("Failed to initialize database", e);
+        }
+    }
+
+    private static void addColumnIfMissing(Connection connection, String tableName, String columnName, String columnDefinition) throws SQLException {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery("PRAGMA table_info(" + tableName + ")")) {
+            while (resultSet.next()) {
+                if (columnName.equalsIgnoreCase(resultSet.getString("name"))) {
+                    return;
+                }
+            }
+        }
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnDefinition);
         }
     }
 }

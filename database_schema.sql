@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS menu_items (
     category TEXT NOT NULL,
     price TEXT NOT NULL,
     ingredients TEXT NOT NULL,
-    status TEXT NOT NULL
+    status TEXT NOT NULL,
+    image_path TEXT NOT NULL DEFAULT 'assets/menu/default.png'
 );
 
 CREATE TABLE IF NOT EXISTS inventory_items (
@@ -14,6 +15,15 @@ CREATE TABLE IF NOT EXISTS inventory_items (
     exp_date TEXT NOT NULL,
     status TEXT NOT NULL,
     notify_status TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS menu_ingredients (
+    menu_name TEXT NOT NULL,
+    stock_product TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY(menu_name, stock_product),
+    FOREIGN KEY(menu_name) REFERENCES menu_items(menu_name) ON DELETE CASCADE,
+    FOREIGN KEY(stock_product) REFERENCES inventory_items(product) ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS orders (

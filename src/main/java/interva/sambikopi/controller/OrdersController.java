@@ -77,7 +77,19 @@ public class OrdersController {
 
     @FXML
     private void handleCompleteOrder() {
-        updateSelectedOrderStatus("Complete", "Order completed: ");
+        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            setStatus("Select an order first.", true);
+            return;
+        }
+
+        SambiKopiDataStore.StockDeductionResult result = SambiKopiDataStore.completeOrderAndDeductStock(selected);
+        orderTable.refresh();
+        if (result.isSuccess()) {
+            setStatus(result.getMessage() + " " + selected.getOrderId(), false);
+        } else {
+            setStatus(result.getMessage(), true);
+        }
     }
 
     @FXML

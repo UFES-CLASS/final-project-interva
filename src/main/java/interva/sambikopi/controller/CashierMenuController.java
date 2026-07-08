@@ -12,10 +12,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -155,6 +159,7 @@ public class CashierMenuController {
         item.categoryProperty().addListener((observable, oldValue, newValue) -> loadApprovedMenuCards());
         item.menuNameProperty().addListener((observable, oldValue, newValue) -> loadApprovedMenuCards());
         item.priceProperty().addListener((observable, oldValue, newValue) -> loadApprovedMenuCards());
+        item.imagePathProperty().addListener((observable, oldValue, newValue) -> loadApprovedMenuCards());
     }
 
     private void loadApprovedMenuCards() {
@@ -182,17 +187,25 @@ public class CashierMenuController {
     private VBox createMenuCard(CafeMenuItem item) {
         VBox card = new VBox(8);
         card.setPrefWidth(165);
-        card.setPrefHeight(210);
+        card.setPrefHeight(230);
         card.setStyle("-fx-background-color:white; -fx-background-radius:14; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.10), 10, 0, 0, 3);");
 
-        VBox cardTop = new VBox();
-        cardTop.setPrefHeight(85);
-        cardTop.setPadding(new Insets(10));
+        StackPane cardTop = new StackPane();
+        cardTop.setPrefHeight(100);
         cardTop.setStyle("-fx-background-color:#EFE4D1; -fx-background-radius:14 14 0 0;");
+
+        ImageView imageView = new ImageView(loadMenuImage(item.getImagePath()));
+        imageView.setFitWidth(165);
+        imageView.setFitHeight(100);
+        imageView.setPreserveRatio(false);
+        imageView.setSmooth(true);
 
         Label categoryLabel = new Label(item.getCategory());
         categoryLabel.setStyle("-fx-background-color:#5B514B; -fx-text-fill:white; -fx-background-radius:10; -fx-padding:3 10 3 10; -fx-font-size:11px; -fx-font-weight:bold;");
-        cardTop.getChildren().add(categoryLabel);
+        StackPane.setMargin(categoryLabel, new Insets(8, 0, 0, 8));
+        StackPane.setAlignment(categoryLabel, javafx.geometry.Pos.TOP_LEFT);
+
+        cardTop.getChildren().addAll(imageView, categoryLabel);
 
         VBox cardBody = new VBox(4);
         cardBody.setPadding(new Insets(10));
@@ -212,6 +225,20 @@ public class CashierMenuController {
         cardBody.getChildren().addAll(nameLabel, priceLabel, addButton);
         card.getChildren().addAll(cardTop, cardBody);
         return card;
+    }
+
+    private Image loadMenuImage(String imagePath) {
+        String resolvedPath = imagePath == null || imagePath.isBlank()
+                ? SambiKopiDataStore.DEFAULT_MENU_IMAGE
+                : imagePath;
+        File file = new File(resolvedPath);
+        if (!file.exists()) {
+            file = new File(SambiKopiDataStore.DEFAULT_MENU_IMAGE);
+        }
+        if (file.exists()) {
+            return new Image(file.toURI().toString(), 165, 100, false, true);
+        }
+        return new Image("https://via.placeholder.com/165x100.png?text=Menu", 165, 100, false, true);
     }
 
     private void addItem(String name, int price) {

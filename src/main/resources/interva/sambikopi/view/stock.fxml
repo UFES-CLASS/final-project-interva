@@ -49,7 +49,9 @@
     <HBox spacing="14.0">
         <Button fx:id="checkStockButton" onAction="#handleCheckStock" text="Check Stock" prefHeight="46.0" prefWidth="150.0"
                 style="-fx-background-color:#7D9B76; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+        <Button fx:id="addStockButton" onAction="#handleAddStock" text="Add Stock" prefHeight="46.0" prefWidth="140.0"
+                style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
         <Button fx:id="notifyOwnerButton" onAction="#handleNotifyOwner" text="Notify Owner" prefHeight="46.0" prefWidth="160.0"
-                style="-fx-background-color:#C98963; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+                style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
     </HBox>
 </VBox>

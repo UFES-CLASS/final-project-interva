@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -14,6 +15,15 @@ import java.io.IOException;
 public class MainController {
 
     private static final String OWNER_PASSWORD = "owner123";
+
+    @FXML private StackPane roleWorkspacePane;
+    @FXML private BorderPane baristaWorkspace;
+    @FXML private BorderPane cashierWorkspace;
+    @FXML private BorderPane ownerWorkspace;
+
+    @FXML private Button roleBaristaButton;
+    @FXML private Button roleCashierButton;
+    @FXML private Button roleOwnerButton;
 
     @FXML private StackPane baristaContentPane;
     @FXML private StackPane cashierContentPane;
@@ -44,11 +54,33 @@ public class MainController {
     private static final String ACTIVE_BUTTON = "-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10; -fx-font-size:14px;";
     private static final String INACTIVE_BUTTON = "-fx-background-color:transparent; -fx-text-fill:#D8C8BC; -fx-font-size:14px;";
 
+    private static final String ACTIVE_ROLE_BUTTON = "-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10; -fx-font-size:13px; -fx-border-color:#C96B43; -fx-border-radius:10;";
+    private static final String INACTIVE_ROLE_BUTTON = "-fx-background-color:#FBF8F0; -fx-text-fill:#2D1B14; -fx-font-weight:bold; -fx-background-radius:10; -fx-font-size:13px; -fx-border-color:#E5D8C8; -fx-border-radius:10;";
+
     @FXML
     private void initialize() {
         showBaristaMenu();
         showCashierMenu();
         showOwnerLogin();
+        showRoleBarista();
+    }
+
+    @FXML
+    private void showRoleBarista() {
+        showWorkspace(baristaWorkspace);
+        setRoleActive(roleBaristaButton);
+    }
+
+    @FXML
+    private void showRoleCashier() {
+        showWorkspace(cashierWorkspace);
+        setRoleActive(roleCashierButton);
+    }
+
+    @FXML
+    private void showRoleOwner() {
+        showWorkspace(ownerWorkspace);
+        setRoleActive(roleOwnerButton);
     }
 
     @FXML
@@ -104,7 +136,7 @@ public class MainController {
     private void handleOwnerLogin() {
         String password = ownerPasswordField.getText().trim();
         if (!OWNER_PASSWORD.equals(password)) {
-            ownerLoginStatusLabel.setText("Wrong owner password. Please try again.");
+            ownerLoginStatusLabel.setText("Wrong password, Please try again");
             ownerLoginStatusLabel.setStyle("-fx-text-fill:#B04A34; -fx-font-weight:bold;");
             return;
         }
@@ -156,6 +188,25 @@ public class MainController {
         ownerContentPane.setManaged(false);
         ownerLoginStatusLabel.setText("Owner login is required to access review and report pages.");
         ownerLoginStatusLabel.setStyle("-fx-text-fill:#6E655C; -fx-font-weight:bold;");
+    }
+
+    private void showWorkspace(BorderPane activeWorkspace) {
+        baristaWorkspace.setVisible(false);
+        baristaWorkspace.setManaged(false);
+        cashierWorkspace.setVisible(false);
+        cashierWorkspace.setManaged(false);
+        ownerWorkspace.setVisible(false);
+        ownerWorkspace.setManaged(false);
+
+        activeWorkspace.setVisible(true);
+        activeWorkspace.setManaged(true);
+    }
+
+    private void setRoleActive(Button activeButton) {
+        roleBaristaButton.setStyle(INACTIVE_ROLE_BUTTON);
+        roleCashierButton.setStyle(INACTIVE_ROLE_BUTTON);
+        roleOwnerButton.setStyle(INACTIVE_ROLE_BUTTON);
+        activeButton.setStyle(ACTIVE_ROLE_BUTTON);
     }
 
     private void loadInto(StackPane targetPane, String fxmlName) {
