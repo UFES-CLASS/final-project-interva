@@ -25,7 +25,7 @@
     </VBox>
 
     <HBox spacing="12.0">
-        <TextField fx:id="orderSearchField" promptText="Search order ID, customer, product, or status..." prefHeight="42.0" prefWidth="500.0"
+        <TextField fx:id="orderSearchField" promptText="Search order ID, customer, product, or status..." prefHeight="42.0" prefWidth="500.0" maxWidth="9999.0" HBox.hgrow="ALWAYS"
                    style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
         <Button fx:id="searchButton" onAction="#handleSearchOrders" text="Search" prefHeight="42.0" prefWidth="100.0"
                 style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
@@ -37,7 +37,7 @@
 
     <Label fx:id="orderStatusLabel" text="Manage incoming cashier orders." wrapText="true" style="-fx-text-fill:#4F6448; -fx-font-weight:bold;" />
 
-    <TableView fx:id="orderTable" prefHeight="400.0" prefWidth="980.0"
+    <TableView fx:id="orderTable" prefHeight="400.0" maxWidth="9999.0" VBox.vgrow="ALWAYS"
                style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-border-radius:12; -fx-background-radius:12;">
         <columns>
             <TableColumn fx:id="colOrderId" text="ORDER ID" prefWidth="110.0" />

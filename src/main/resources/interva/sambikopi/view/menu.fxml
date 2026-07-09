@@ -21,57 +21,57 @@
 
     <VBox spacing="6.0">
         <Label text="Menu" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-        <Label text="Input new cafe menu data, choose stock ingredients, then submit it for Owner review." style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
+        <Label text="Input new cafe menu data, choose stock ingredients, then submit it for Owner review." wrapText="true" style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
     </VBox>
 
-    <VBox spacing="18.0" maxWidth="900.0" style="-fx-background-color:#FBF8F0; -fx-background-radius:16; -fx-border-color:#E5D8C8; -fx-border-radius:16; -fx-padding:28; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.08), 12, 0, 0, 3);">
-        <HBox spacing="20.0">
-            <VBox spacing="8.0" prefWidth="400.0">
+    <VBox spacing="18.0" maxWidth="9999.0" VBox.vgrow="ALWAYS" style="-fx-background-color:#FBF8F0; -fx-background-radius:16; -fx-border-color:#E5D8C8; -fx-border-radius:16; -fx-padding:28; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.08), 12, 0, 0, 3);">
+        <HBox spacing="20.0" maxWidth="9999.0">
+            <VBox spacing="8.0" HBox.hgrow="ALWAYS" minWidth="280.0" prefWidth="420.0" maxWidth="9999.0">
                 <Label text="MENU NAME" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-                <TextField fx:id="menuNameField" promptText="e.g. Kopi Susu Gula Aren" prefHeight="42.0"
+                <TextField fx:id="menuNameField" promptText="e.g. Kopi Milk Gula Aren" prefHeight="42.0" maxWidth="9999.0"
                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
             </VBox>
 
-            <VBox spacing="8.0" prefWidth="280.0">
+            <VBox spacing="8.0" HBox.hgrow="ALWAYS" minWidth="280.0" prefWidth="420.0" maxWidth="9999.0">
                 <Label text="CATEGORY" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-                <ComboBox fx:id="categoryComboBox" prefHeight="42.0" prefWidth="280.0"
+                <ComboBox fx:id="categoryComboBox" prefHeight="42.0" maxWidth="9999.0"
                           style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
             </VBox>
         </HBox>
 
-        <HBox spacing="20.0">
-            <VBox spacing="8.0" prefWidth="260.0">
+        <HBox spacing="20.0" maxWidth="9999.0">
+            <VBox spacing="8.0" HBox.hgrow="ALWAYS" minWidth="280.0" prefWidth="360.0" maxWidth="9999.0">
                 <Label text="PRICE" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-                <TextField fx:id="priceField" promptText="e.g. 18000 or Rp 18.000" prefHeight="42.0"
+                <TextField fx:id="priceField" promptText="e.g. 18000 or Rp 18.000" prefHeight="42.0" maxWidth="9999.0"
                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
             </VBox>
 
-            <VBox spacing="8.0" prefWidth="500.0">
+            <VBox spacing="8.0" HBox.hgrow="ALWAYS" minWidth="360.0" prefWidth="520.0" maxWidth="9999.0">
                 <Label text="MENU PHOTO" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
                 <HBox spacing="10.0">
-                    <Button fx:id="chooseImageButton" onAction="#handleChooseImage" text="Upload Photo" prefHeight="42.0" prefWidth="140.0"
+                    <Button fx:id="chooseImageButton" onAction="#handleChooseImage" text="Upload Photo" prefHeight="42.0" prefWidth="150.0"
                             style="-fx-background-color:white; -fx-border-color:#D8B89A; -fx-text-fill:#2D1B14; -fx-font-weight:bold; -fx-background-radius:9; -fx-border-radius:9;" />
-                    <Label fx:id="selectedImageLabel" text="No photo selected. Default image will be used." wrapText="true" prefWidth="330.0"
+                    <Label fx:id="selectedImageLabel" text="No photo selected. Default image will be used." wrapText="true" HBox.hgrow="ALWAYS" maxWidth="9999.0"
                            style="-fx-text-fill:#8A8178; -fx-font-size:12px;" />
                 </HBox>
             </VBox>
         </HBox>
 
-        <VBox spacing="10.0">
+        <VBox spacing="10.0" VBox.vgrow="ALWAYS" maxWidth="9999.0">
             <Label text="INGREDIENTS FROM STOCK" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
             <HBox spacing="10.0">
-                <ComboBox fx:id="ingredientStockComboBox" promptText="Choose stock item" prefHeight="42.0" prefWidth="270.0"
+                <ComboBox fx:id="ingredientStockComboBox" promptText="Choose stock item" prefHeight="42.0" HBox.hgrow="ALWAYS" maxWidth="9999.0"
                           style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
-                <TextField fx:id="ingredientQuantityField" promptText="Qty" prefHeight="42.0" prefWidth="80.0"
+                <TextField fx:id="ingredientQuantityField" promptText="Qty" prefHeight="42.0" prefWidth="90.0"
                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
-                <ComboBox fx:id="ingredientUnitComboBox" promptText="Unit" prefHeight="42.0" prefWidth="110.0"
+                <ComboBox fx:id="ingredientUnitComboBox" promptText="Unit" prefHeight="42.0" prefWidth="120.0"
                           style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
                 <Button fx:id="addIngredientButton" onAction="#handleAddIngredient" text="Add Ingredient" prefHeight="42.0" prefWidth="150.0"
                         style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
                 <Button fx:id="removeIngredientButton" onAction="#handleRemoveIngredient" text="Remove" prefHeight="42.0" prefWidth="100.0"
                         style="-fx-background-color:white; -fx-border-color:#B04A34; -fx-text-fill:#B04A34; -fx-font-weight:bold; -fx-background-radius:9; -fx-border-radius:9;" />
             </HBox>
-            <ListView fx:id="ingredientsListView" prefHeight="115.0" prefWidth="760.0"
+            <ListView fx:id="ingredientsListView" prefHeight="135.0" maxWidth="9999.0" VBox.vgrow="ALWAYS"
                       style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
         </VBox>
 

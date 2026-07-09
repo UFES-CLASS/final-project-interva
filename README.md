@@ -13,7 +13,7 @@ Sambi Kopi POS is a JavaFX desktop application for simple cafe operations. The a
 ## How to Run
 
 ```bash
-mvn clean javafx:run
+mvn javafx:run
 ```
 
 ## Database
@@ -64,6 +64,9 @@ Wrong password, Please try again
 - Automatically reduce linked stock ingredients when an order is completed
 - Prevent completing an order if the required stock is not enough
 
+### Screenshot
+![images](https://i.postimg.cc/FRNfxs1m/Screenshot-2026-07-08-083226.png)
+
 ### Cashier
 
 - Input customer name
@@ -76,6 +79,9 @@ Wrong password, Please try again
 - Send confirmed orders to Barista Orders
 - View cashier order history
 
+### Screenshot
+![images](https://i.postimg.cc/PrPCy7f2/Screenshot-2026-07-08-083656.png)
+
 ### Owner
 
 - Login-protected Owner tab
@@ -85,6 +91,9 @@ Wrong password, Please try again
 - Approve or reject new menu items
 - View report dashboard with summary cards and charts
 - See order status chart and payment method chart
+
+### Screenshot
+![images](https://i.postimg.cc/QMkCVGmR/Screenshot-2026-07-08-083801.png)
 
 ## Data Structure Usage
 
@@ -106,6 +115,7 @@ This project uses JavaFX data structures such as `ObservableList` and `FilteredL
 - Added `.gitignore` to exclude compiled files, IDE settings, and local database files
 - Updated menu card image display to stretch and fill the image area
 - Updated IDR price format, for example `Rp 10.000`
+- Updated flexible screen
 
 ## Notes
 

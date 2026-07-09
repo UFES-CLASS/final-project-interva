@@ -725,7 +725,7 @@ public final class SambiKopiDataStore {
                 insertSeedInventory(connection, new InventoryItem("Water", 50, "31/12/2026", "Available", "Not notified"));
                 insertSeedInventory(connection, new InventoryItem("Sugar", 30, "31/12/2026", "Available", "Not notified"));
 
-                insertSeedMenu(connection, new CafeMenuItem("Kopi Susu Gula Aren", "Coffee", "Rp 18.000", "Fresh Milk - 1 portion, Coffee Beans - 1 portion, Palm Sugar - 1 portion", "Pending Approval", "assets/menu/kopi_milk_gula_aren.png"));
+                insertSeedMenu(connection, new CafeMenuItem("Kopi Milk Gula Aren", "Coffee", "Rp 18.000", "Fresh Milk - 1 portion, Coffee Beans - 1 portion, Palm Sugar - 1 portion", "Pending Approval", "assets/menu/kopi_milk_gula_aren.png"));
                 insertSeedMenu(connection, new CafeMenuItem("Americano", "Coffee", "Rp 15.000", "Coffee Beans - 1 portion, Water - 1 portion", "Approved", "assets/menu/americano.png"));
                 insertSeedMenu(connection, new CafeMenuItem("Matcha Latte", "Non-Coffee", "Rp 22.000", "Matcha Powder - 1 portion, Fresh Milk - 1 portion, Sugar - 1 portion", "Approved", "assets/menu/matcha_latte.png"));
                 insertSeedMenu(connection, new CafeMenuItem("Almond Croissant", "Pastry", "Rp 25.000", "Flour - 1 portion, Butter - 1 portion, Almond - 1 portion", "Pending Approval", "assets/menu/almond_croissant.png"));

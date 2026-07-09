@@ -3,9 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
@@ -21,7 +22,8 @@
             <Insets bottom="28.0" left="34.0" right="28.0" top="28.0" />
         </padding>
 
-        <VBox spacing="20.0" prefWidth="680.0">
+        <!-- Flexible left content. It grows when the window is maximized. -->
+        <VBox spacing="20.0" HBox.hgrow="ALWAYS" minWidth="0.0">
             <VBox spacing="6.0">
                 <Label text="New order" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
                 <Label text="Select menu items for the customer" style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
@@ -38,10 +40,24 @@
                         style="-fx-background-color:white; -fx-text-fill:#6E655C; -fx-font-weight:bold; -fx-background-radius:18;" />
             </HBox>
 
-            <FlowPane fx:id="menuCardsPane" hgap="22.0" vgap="22.0" prefWrapLength="650.0" />
+            <!-- Responsive menu card area. The FlowPane wrap width follows the ScrollPane viewport. -->
+            <ScrollPane fx:id="menuScrollPane"
+                        fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        style="-fx-background-color:transparent; -fx-background:transparent; -fx-border-color:transparent;">
+                <content>
+                    <FlowPane fx:id="menuCardsPane"
+                              hgap="22.0"
+                              vgap="22.0"
+                              prefWrapLength="650.0"
+                              style="-fx-background-color:transparent; -fx-padding:0 0 18 0;" />
+                </content>
+            </ScrollPane>
         </VBox>
 
-        <VBox prefWidth="360.0" spacing="18.0" style="-fx-background-color:#FBF8F0; -fx-border-color:#E5D8C8; -fx-border-width:0 0 0 1; -fx-padding:25;">
+        <!-- Receipt panel keeps a stable width so it stays neat on fullscreen. -->
+        <VBox prefWidth="380.0" minWidth="360.0" maxWidth="420.0" spacing="18.0"
+              style="-fx-background-color:#FBF8F0; -fx-border-color:#E5D8C8; -fx-border-width:0 0 0 1; -fx-padding:25;">
             <VBox spacing="3.0">
                 <Label text="Sambi Kopi" style="-fx-font-size:18px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
                 <Label text="Jl. Kaliurang, Yogyakarta" style="-fx-text-fill:#8A8178;" />
@@ -61,7 +77,8 @@
                 <HBox><Label text="Payment" prefWidth="130.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="paymentMethodLabel" text="Card" style="-fx-font-weight:bold;" /></HBox>
             </VBox>
 
-            <VBox fx:id="receiptItemsBox" spacing="8.0" prefHeight="150.0" style="-fx-border-color:#EFE2D2; -fx-border-width:1 0 1 0; -fx-padding:15 0 15 0;" />
+            <VBox fx:id="receiptItemsBox" spacing="8.0" prefHeight="150.0" VBox.vgrow="ALWAYS"
+                  style="-fx-border-color:#EFE2D2; -fx-border-width:1 0 1 0; -fx-padding:15 0 15 0;" />
 
             <VBox spacing="7.0">
                 <HBox><Label text="Subtotal" prefWidth="180.0" style="-fx-text-fill:#8A8178;" /><Label fx:id="subtotalLabel" text="Rp 0" /></HBox>

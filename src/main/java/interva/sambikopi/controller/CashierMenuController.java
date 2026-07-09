@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,6 +39,7 @@ public class CashierMenuController {
     @FXML private Button pastryFilterButton;
 
     @FXML private FlowPane menuCardsPane;
+    @FXML private ScrollPane menuScrollPane;
 
     @FXML private Button cashButton;
     @FXML private Button cardButton;
@@ -70,6 +72,7 @@ public class CashierMenuController {
 
     @FXML
     private void initialize() {
+        makeMenuCardsResponsive();
         resetOrderInfo();
         setPaymentMethod("Card");
         observeMenuItems();
@@ -141,6 +144,19 @@ public class CashierMenuController {
         resetOrderInfo();
         updateReceipt();
         setStatus("New cashier order started.", false);
+    }
+
+    private void makeMenuCardsResponsive() {
+        if (menuScrollPane == null || menuCardsPane == null) {
+            return;
+        }
+
+        menuScrollPane.viewportBoundsProperty().addListener((observable, oldBounds, newBounds) -> {
+            double width = newBounds.getWidth();
+            if (width > 0) {
+                menuCardsPane.setPrefWrapLength(width);
+            }
+        });
     }
 
     private void observeMenuItems() {

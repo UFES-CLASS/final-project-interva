@@ -139,9 +139,9 @@
                         <VBox maxWidth="430.0" spacing="16.0" style="-fx-background-color:#FBF8F0; -fx-background-radius:18; -fx-border-color:#E5D8C8; -fx-border-radius:18; -fx-padding:34; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.08), 12, 0, 0, 3);">
                             <Label text="Owner Login" style="-fx-font-size:32px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
                             <Label text="Enter owner password to review stock, new menus, and reports." wrapText="true" style="-fx-text-fill:#8A8178; -fx-font-size:15px;" />
-                            <PasswordField fx:id="ownerPasswordField" promptText="Owner password" prefHeight="44.0"
+                            <PasswordField fx:id="ownerPasswordField" promptText="Owner password" prefHeight="44.0" onAction="#handleOwnerLogin"
                                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
-                            <Button fx:id="ownerLoginButton" onAction="#handleOwnerLogin" text="Login as Owner" prefHeight="46.0" maxWidth="9999"
+                            <Button fx:id="ownerLoginButton" onAction="#handleOwnerLogin" text="Login as Owner" defaultButton="true" prefHeight="46.0" maxWidth="9999"
                                     style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
                             <Label fx:id="ownerLoginStatusLabel" text="Owner login is required." wrapText="true" style="-fx-text-fill:#6E655C; -fx-font-weight:bold;" />
                         </VBox>
