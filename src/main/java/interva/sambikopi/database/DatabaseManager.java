@@ -48,6 +48,7 @@ public final class DatabaseManager {
                             menu_name TEXT NOT NULL,
                             stock_product TEXT NOT NULL,
                             quantity INTEGER NOT NULL,
+                            unit TEXT NOT NULL DEFAULT 'portion',
                             PRIMARY KEY(menu_name, stock_product),
                             FOREIGN KEY(menu_name) REFERENCES menu_items(menu_name) ON DELETE CASCADE,
                             FOREIGN KEY(stock_product) REFERENCES inventory_items(product) ON UPDATE CASCADE
@@ -74,6 +75,7 @@ public final class DatabaseManager {
                         """);
 
                 addColumnIfMissing(connection, "menu_items", "image_path", "TEXT NOT NULL DEFAULT 'assets/menu/default.png'");
+                addColumnIfMissing(connection, "menu_ingredients", "unit", "TEXT NOT NULL DEFAULT 'portion'");
             }
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException("Failed to initialize database", e);

@@ -18,6 +18,8 @@ public class OwnerReportController {
     @FXML private Label totalSalesLabel;
     @FXML private Label pendingMenuLabel;
     @FXML private Label notifiedStockLabel;
+    @FXML private Label approvedMenusLabel;
+    @FXML private Label lowStockLabel;
     @FXML private BarChart<String, Number> orderStatusChart;
     @FXML private PieChart paymentChart;
 
@@ -42,6 +44,12 @@ public class OwnerReportController {
         totalSalesLabel.setText(SambiKopiDataStore.formatIdr(totalSales));
         pendingMenuLabel.setText(String.valueOf(SambiKopiDataStore.getMenuReviewItems().size()));
         notifiedStockLabel.setText(String.valueOf(SambiKopiDataStore.getStockReviewItems().size()));
+        approvedMenusLabel.setText(String.valueOf(SambiKopiDataStore.getMenuItems().stream()
+                .filter(item -> item.getStatus().equalsIgnoreCase("Approved"))
+                .count()));
+        lowStockLabel.setText(String.valueOf(SambiKopiDataStore.getInventoryItems().stream()
+                .filter(item -> item.getStatus().equalsIgnoreCase("Low Stock") || item.getStatus().equalsIgnoreCase("Critical"))
+                .count()));
 
         orderStatusChart.getData().clear();
         XYChart.Series<String, Number> orderSeries = new XYChart.Series<>();

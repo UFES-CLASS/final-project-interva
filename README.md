@@ -1,6 +1,14 @@
 # Sambi Kopi POS
 
-Sambi Kopi POS is a JavaFX desktop application for simple cafe operations. The application is separated into three role tabs: **Barista**, **Cashier**, and **Owner**.
+Sambi Kopi POS is a JavaFX desktop application for simple cafe operations. The application is separated into three compact role tabs: **Barista**, **Cashier**, and **Owner**.
+
+## Team member
+
+- Daniel Widison Yeoh - 25523047
+- Faizah Nabila Azzahra - 25523189
+- Muhammad Malik Firdaus - 25523002
+- Madina Nurbaiti - 25523224
+- Xabbi Alghifari Agratama - 25523211
 
 ## How to Run
 
@@ -10,29 +18,17 @@ mvn clean javafx:run
 
 ## Database
 
-This version uses **SQLite** as the local database.
-
-When the application runs for the first time, it will automatically create this database file in the project folder:
+This project uses **SQLite** as the local database. When the application runs for the first time, it will create this database file in the project folder:
 
 ```text
 sambi_kopi.db
 ```
 
-The database stores:
-
-- Menu items
-- Menu photo paths
-- Menu ingredient requirements
-- Inventory / stock data
-- Cashier orders
-- Owner menu review data
-- Owner stock notification data
-
-Because SQLite is used locally, the data will remain saved even after the application is closed and opened again.
+The database stores menu data, menu photos, ingredient links, stock data, cashier orders, owner menu reviews, and stock notifications. If `sambi_kopi.db` is deleted, the application will create a new database and insert default sample data again.
 
 ## Owner Login
 
-Open the Owner tab and use this default password:
+Default Owner password:
 
 ```text
 owner123
@@ -44,57 +40,73 @@ The password can be changed in:
 src/main/java/interva/sambikopi/controller/MainController.java
 ```
 
-## Barista Features
+If the wrong password is entered, the application displays:
 
-- Add new menu items
-- Upload menu photos from local files
-- Choose menu ingredients from Stock
-- Set ingredient quantity requirements for each menu item
-- Send saved new menu items to Owner Review
-- View Menu List
-- Delete selected menu item
+```text
+Wrong password, Please try again
+```
+
+## Main Features
+
+### Barista
+
+- Add new menu items and upload menu photos
+- Select menu ingredients from Stock
+- Add ingredient quantity and unit, such as `1 portion`, `100 gram`, or `250 ml`
+- Send new menu items to Owner Review
+- View, search, edit, and delete Menu List data
 - Delete all menu items with confirmation
-- Check stock from the Stock page
-- Add stock data with DatePicker expiration date
+- Check, add, and edit Stock data
+- Select stock expiration date using DatePicker
 - Notify Owner about low or critical stock
-- View cashier orders
+- Manage cashier orders
 - Assign, complete, or cancel orders
-- Automatically reduce linked stock when an order is completed
+- Automatically reduce linked stock ingredients when an order is completed
+- Prevent completing an order if the required stock is not enough
 
-## Cashier Features
+### Cashier
 
-- Create customer orders
 - Input customer name
-- View approved menu items with photos
+- View approved menu items with menu photos
+- Filter menu by category
 - Select approved menu items
-- Filter menu items by category
 - Select payment method
 - Receive payment
+- Show order confirmation / receipt popup
 - Send confirmed orders to Barista Orders
 - View cashier order history
 
-## Owner Features
+### Owner
 
-- Login-required Owner tab
+- Login-protected Owner tab
 - Review stock notifications from Barista
 - Mark stock notifications as reviewed
-- Review new menu requests from Barista
+- Review new menu submissions
 - Approve or reject new menu items
-- View report dashboard with charts
+- View report dashboard with summary cards and charts
 - See order status chart and payment method chart
+
+## Data Structure Usage
+
+This project uses JavaFX data structures such as `ObservableList` and `FilteredList` to store, display, and filter menu, stock, order, and review data in the UI.
 
 ## New Updates
 
-- Added menu image support
-- Added `assets/menu` folder for menu photos
-- Added image path storage in SQLite database
-- Added menu photo upload in Barista Menu
-- Added stock-based ingredient selection in Barista Menu
-- Added `menu_ingredients` database table
-- Linked menu ingredients to inventory stock data
-- Completing an order now deducts stock based on the ordered menu ingredients
-- Cashier Menu now displays menu photos
+- Added menu photo support for Cashier Menu
+- Added image path storage in the database
+- Added `assets/menu/` folder for menu photos
+- Added photo upload in Barista Menu
+- Added ingredient-to-stock linking system
+- Added ingredient unit support
+- Added automatic stock deduction when Barista completes an order
+- Added stock validation before completing an order
+- Added Edit Menu feature
+- Added Edit Stock feature
+- Added more Owner Report summary cards
+- Added `.gitignore` to exclude compiled files, IDE settings, and local database files
+- Updated menu card image display to stretch and fill the image area
+- Updated IDR price format, for example `Rp 10.000`
 
 ## Notes
 
-The application uses a local SQLite database file. If you delete `sambi_kopi.db`, the application will create a new database and insert the default sample data again on the next run.
+The application uses a local SQLite database. The `.gitignore` excludes `.db` files, so GitHub should store the source code and `database_schema.sql`, not the local database file.

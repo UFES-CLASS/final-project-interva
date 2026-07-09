@@ -137,6 +137,71 @@ public class StockController {
         });
     }
 
+    @FXML
+    private void handleEditStock() {
+        InventoryItem selected = stockTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            setStatus("Select a stock item first before editing.", true);
+            return;
+        }
+
+        Dialog<InventoryItem> dialog = new Dialog<>();
+        dialog.setTitle("Edit Stock");
+        dialog.setHeaderText("Update stock item: " + selected.getProduct());
+
+        ButtonType saveButtonType = new ButtonType("Save Changes", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        TextField productField = new TextField(selected.getProduct());
+        productField.setEditable(false);
+
+        TextField stockField = new TextField(String.valueOf(selected.getStock()));
+
+        DatePicker expDatePicker = new DatePicker();
+        try {
+            expDatePicker.setValue(LocalDate.parse(selected.getExpDate(), EXP_DATE_FORMATTER));
+        } catch (Exception e) {
+            expDatePicker.setValue(LocalDate.now());
+        }
+        expDatePicker.setPrefWidth(260);
+
+        VBox form = new VBox(8,
+                new Label("Product:"), productField,
+                new Label("Stock:"), stockField,
+                new Label("Exp Date:"), expDatePicker);
+        form.setPadding(new Insets(12));
+        dialog.getDialogPane().setContent(form);
+
+        dialog.setResultConverter(button -> {
+            if (button == saveButtonType) {
+                int stock;
+                try {
+                    stock = Integer.parseInt(stockField.getText().trim());
+                } catch (NumberFormatException e) {
+                    setStatus("Stock must be a number.", true);
+                    return null;
+                }
+
+                if (stock < 0 || expDatePicker.getValue() == null) {
+                    setStatus("Stock cannot be negative and exp date cannot be empty.", true);
+                    return null;
+                }
+
+                selected.setStock(stock);
+                selected.setExpDate(expDatePicker.getValue().format(EXP_DATE_FORMATTER));
+                selected.setStatus(getStatusFromStock(stock));
+                return selected;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(item -> {
+            SambiKopiDataStore.updateInventoryItem(item);
+            stockTable.refresh();
+            setStatus("Updated stock item: " + item.getProduct(), false);
+        });
+    }
+
     private String getStatusFromStock(int stock) {
         if (stock <= 3) {
             return "Critical";

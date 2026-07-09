@@ -106,6 +106,12 @@ public class CashierMenuController {
                 .map(line -> line.quantity + "x " + line.name)
                 .collect(Collectors.joining(", "));
 
+        SambiKopiDataStore.StockDeductionResult stockCheck = SambiKopiDataStore.validateStockAvailabilityForOrder(summary);
+        if (!stockCheck.isSuccess()) {
+            setStatus(stockCheck.getMessage(), true);
+            return;
+        }
+
         int total = calculateTotal();
         OrderItem savedOrder = SambiKopiDataStore.createCashierOrder(customerName, summary, paymentMethod, total);
 
@@ -186,17 +192,17 @@ public class CashierMenuController {
 
     private VBox createMenuCard(CafeMenuItem item) {
         VBox card = new VBox(8);
-        card.setPrefWidth(165);
-        card.setPrefHeight(230);
+        card.setPrefWidth(190);
+        card.setPrefHeight(245);
         card.setStyle("-fx-background-color:white; -fx-background-radius:14; -fx-effect:dropshadow(three-pass-box, rgba(45,27,20,0.10), 10, 0, 0, 3);");
 
         StackPane cardTop = new StackPane();
-        cardTop.setPrefHeight(100);
+        cardTop.setPrefHeight(120);
         cardTop.setStyle("-fx-background-color:#EFE4D1; -fx-background-radius:14 14 0 0;");
 
         ImageView imageView = new ImageView(loadMenuImage(item.getImagePath()));
-        imageView.setFitWidth(165);
-        imageView.setFitHeight(100);
+        imageView.setFitWidth(190);
+        imageView.setFitHeight(120);
         imageView.setPreserveRatio(false);
         imageView.setSmooth(true);
 
@@ -208,7 +214,7 @@ public class CashierMenuController {
         cardTop.getChildren().addAll(imageView, categoryLabel);
 
         VBox cardBody = new VBox(4);
-        cardBody.setPadding(new Insets(10));
+        cardBody.setPadding(new Insets(10, 12, 8, 12));
 
         Label nameLabel = new Label(item.getMenuName());
         nameLabel.setWrapText(true);
@@ -236,9 +242,9 @@ public class CashierMenuController {
             file = new File(SambiKopiDataStore.DEFAULT_MENU_IMAGE);
         }
         if (file.exists()) {
-            return new Image(file.toURI().toString(), 165, 100, false, true);
+            return new Image(file.toURI().toString(), 190, 120, false, true);
         }
-        return new Image("https://via.placeholder.com/165x100.png?text=Menu", 165, 100, false, true);
+        return new Image("https://via.placeholder.com/190x120.png?text=Menu", 190, 120, false, true);
     }
 
     private void addItem(String name, int price) {

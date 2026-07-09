@@ -84,6 +84,28 @@ public final class SambiKopiDataStore {
         deleteMenuItem(item);
     }
 
+    public static void updateMenuItem(CafeMenuItem item) {
+        if (item == null) {
+            return;
+        }
+        upsertMenuItem(item);
+        CafeMenuItem existing = findMenuByName(item.getMenuName());
+        if (existing != null) {
+            existing.setCategory(item.getCategory());
+            existing.setPrice(item.getPrice());
+            existing.setIngredients(item.getIngredients());
+            existing.setStatus(item.getStatus());
+            existing.setImagePath(item.getImagePath());
+        }
+        if ("Pending Approval".equalsIgnoreCase(item.getStatus())) {
+            if (!MENU_REVIEW_ITEMS.contains(existing != null ? existing : item)) {
+                MENU_REVIEW_ITEMS.add(existing != null ? existing : item);
+            }
+        } else {
+            MENU_REVIEW_ITEMS.remove(existing != null ? existing : item);
+        }
+    }
+
     public static void deleteMenuItem(CafeMenuItem item) {
         if (item == null) {
             return;
@@ -124,6 +146,31 @@ public final class SambiKopiDataStore {
         if ("Notified".equalsIgnoreCase(item.getNotifyStatus())) {
             STOCK_REVIEW_ITEMS.add(item);
             ownerStockNotificationCount++;
+        }
+    }
+
+    public static void updateInventoryItem(InventoryItem item) {
+        if (item == null) {
+            return;
+        }
+        item.setStatus(getStatusFromStock(item.getStock()));
+        upsertInventoryItem(item);
+        InventoryItem existing = findInventoryByProduct(item.getProduct());
+        if (existing != null) {
+            existing.setStock(item.getStock());
+            existing.setExpDate(item.getExpDate());
+            existing.setStatus(item.getStatus());
+            existing.setNotifyStatus(item.getNotifyStatus());
+        } else {
+            INVENTORY_ITEMS.add(item);
+        }
+        if ("Notified".equalsIgnoreCase(item.getNotifyStatus())) {
+            InventoryItem target = existing != null ? existing : item;
+            if (!STOCK_REVIEW_ITEMS.contains(target)) {
+                STOCK_REVIEW_ITEMS.add(target);
+            }
+        } else {
+            STOCK_REVIEW_ITEMS.remove(existing != null ? existing : item);
         }
     }
 
@@ -175,6 +222,41 @@ public final class SambiKopiDataStore {
         }
     }
 
+    public static StockDeductionResult validateStockAvailabilityForOrder(String productSummary) {
+        Map<String, Integer> menuQuantities = parseOrderProductSummary(productSummary);
+        Map<String, Integer> stockRequirements = new HashMap<>();
+        Map<String, String> stockUnits = new HashMap<>();
+
+        for (Map.Entry<String, Integer> menuEntry : menuQuantities.entrySet()) {
+            CafeMenuItem menuItem = findMenuByName(menuEntry.getKey());
+            if (menuItem == null) {
+                continue;
+            }
+
+            List<MenuIngredient> ingredients = getMenuIngredients(menuItem.getMenuName());
+            for (MenuIngredient ingredient : ingredients) {
+                int required = ingredient.getQuantity() * menuEntry.getValue();
+                stockRequirements.merge(ingredient.getStockProduct(), required, Integer::sum);
+                stockUnits.putIfAbsent(ingredient.getStockProduct(), ingredient.getUnit());
+            }
+        }
+
+        for (Map.Entry<String, Integer> requirement : stockRequirements.entrySet()) {
+            InventoryItem stockItem = findInventoryByProduct(requirement.getKey());
+            if (stockItem == null) {
+                return StockDeductionResult.failed("Stock item not found: " + requirement.getKey());
+            }
+            if (stockItem.getStock() < requirement.getValue()) {
+                String unit = stockUnits.getOrDefault(stockItem.getProduct(), "portion");
+                return StockDeductionResult.failed("Cannot create order. " + stockItem.getProduct()
+                        + " stock is not enough. Needed " + requirement.getValue() + " " + unit
+                        + ", available " + stockItem.getStock() + " " + unit + ".");
+            }
+        }
+
+        return StockDeductionResult.success("Stock is available for this order.");
+    }
+
     public static StockDeductionResult completeOrderAndDeductStock(OrderItem order) {
         if (order == null) {
             return StockDeductionResult.failed("Select an order first.");
@@ -188,6 +270,7 @@ public final class SambiKopiDataStore {
 
         Map<String, Integer> menuQuantities = parseOrderProductSummary(order.getProduct());
         Map<String, Integer> stockRequirements = new HashMap<>();
+        Map<String, String> stockUnits = new HashMap<>();
 
         for (Map.Entry<String, Integer> menuEntry : menuQuantities.entrySet()) {
             CafeMenuItem menuItem = findMenuByName(menuEntry.getKey());
@@ -199,6 +282,7 @@ public final class SambiKopiDataStore {
             for (MenuIngredient ingredient : ingredients) {
                 int required = ingredient.getQuantity() * menuEntry.getValue();
                 stockRequirements.merge(ingredient.getStockProduct(), required, Integer::sum);
+                stockUnits.putIfAbsent(ingredient.getStockProduct(), ingredient.getUnit());
             }
         }
 
@@ -213,8 +297,10 @@ public final class SambiKopiDataStore {
                 return StockDeductionResult.failed("Stock item not found: " + requirement.getKey());
             }
             if (stockItem.getStock() < requirement.getValue()) {
-                return StockDeductionResult.failed("Not enough stock for " + stockItem.getProduct()
-                        + ". Needed " + requirement.getValue() + ", available " + stockItem.getStock() + ".");
+                String unit = stockUnits.getOrDefault(stockItem.getProduct(), "portion");
+                return StockDeductionResult.failed("Cannot complete order. " + stockItem.getProduct()
+                        + " stock is not enough. Needed " + requirement.getValue() + " " + unit
+                        + ", available " + stockItem.getStock() + " " + unit + ".");
             }
         }
 
@@ -234,7 +320,7 @@ public final class SambiKopiDataStore {
             return ingredients;
         }
 
-        String sql = "SELECT menu_name, stock_product, quantity FROM menu_ingredients WHERE menu_name = ? ORDER BY stock_product";
+        String sql = "SELECT menu_name, stock_product, quantity, unit FROM menu_ingredients WHERE menu_name = ? ORDER BY stock_product";
         try (Connection connection = DatabaseManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, menuName);
@@ -243,7 +329,8 @@ public final class SambiKopiDataStore {
                     ingredients.add(new MenuIngredient(
                             resultSet.getString("menu_name"),
                             resultSet.getString("stock_product"),
-                            resultSet.getInt("quantity")
+                            resultSet.getInt("quantity"),
+                            resultSet.getString("unit")
                     ));
                 }
             }
@@ -463,11 +550,12 @@ public final class SambiKopiDataStore {
                 return;
             }
             try (PreparedStatement insert = connection.prepareStatement(
-                    "INSERT INTO menu_ingredients(menu_name, stock_product, quantity) VALUES(?, ?, ?)")) {
+                    "INSERT INTO menu_ingredients(menu_name, stock_product, quantity, unit) VALUES(?, ?, ?, ?)")) {
                 for (MenuIngredient ingredient : ingredients) {
                     insert.setString(1, menuName);
                     insert.setString(2, ingredient.getStockProduct());
                     insert.setInt(3, Math.max(1, ingredient.getQuantity()));
+                    insert.setString(4, ingredient.getUnit());
                     insert.addBatch();
                 }
                 insert.executeBatch();
@@ -595,17 +683,29 @@ public final class SambiKopiDataStore {
         if (ingredientsText == null || ingredientsText.isBlank()) {
             return ingredients;
         }
-        Pattern pattern = Pattern.compile("(.+)\\s+x(\\d+)$", Pattern.CASE_INSENSITIVE);
+
+        Pattern dashPattern = Pattern.compile("(.+)\\s+-\\s+(\\d+)\\s+(.+)$", Pattern.CASE_INSENSITIVE);
+        Pattern xPattern = Pattern.compile("(.+)\\s+x(\\d+)$", Pattern.CASE_INSENSITIVE);
+
         for (String part : ingredientsText.split(",")) {
             String trimmed = part.trim();
             if (trimmed.isBlank()) {
                 continue;
             }
-            Matcher matcher = pattern.matcher(trimmed);
-            if (matcher.matches()) {
-                ingredients.add(new MenuIngredient(menuName, matcher.group(1).trim(), Integer.parseInt(matcher.group(2))));
+
+            Matcher dashMatcher = dashPattern.matcher(trimmed);
+            Matcher xMatcher = xPattern.matcher(trimmed);
+
+            if (dashMatcher.matches()) {
+                ingredients.add(new MenuIngredient(
+                        menuName,
+                        dashMatcher.group(1).trim(),
+                        Integer.parseInt(dashMatcher.group(2)),
+                        dashMatcher.group(3).trim()));
+            } else if (xMatcher.matches()) {
+                ingredients.add(new MenuIngredient(menuName, xMatcher.group(1).trim(), Integer.parseInt(xMatcher.group(2)), "portion"));
             } else {
-                ingredients.add(new MenuIngredient(menuName, trimmed, 1));
+                ingredients.add(new MenuIngredient(menuName, trimmed, 1, "portion"));
             }
         }
         return ingredients;
@@ -625,10 +725,10 @@ public final class SambiKopiDataStore {
                 insertSeedInventory(connection, new InventoryItem("Water", 50, "31/12/2026", "Available", "Not notified"));
                 insertSeedInventory(connection, new InventoryItem("Sugar", 30, "31/12/2026", "Available", "Not notified"));
 
-                insertSeedMenu(connection, new CafeMenuItem("Kopi Milk Gula Aren", "Coffee", "Rp 18.000", "Fresh Milk x1, Coffee Beans x1, Palm Sugar x1", "Pending Approval", "assets/menu/kopi_milk_gula_aren.png"));
-                insertSeedMenu(connection, new CafeMenuItem("Americano", "Coffee", "Rp 15.000", "Coffee Beans x1, Water x1", "Approved", "assets/menu/americano.png"));
-                insertSeedMenu(connection, new CafeMenuItem("Matcha Latte", "Non-Coffee", "Rp 22.000", "Matcha Powder x1, Fresh Milk x1, Sugar x1", "Approved", "assets/menu/matcha_latte.png"));
-                insertSeedMenu(connection, new CafeMenuItem("Almond Croissant", "Pastry", "Rp 25.000", "Flour x1, Butter x1, Almond x1", "Pending Approval", "assets/menu/almond_croissant.png"));
+                insertSeedMenu(connection, new CafeMenuItem("Kopi Susu Gula Aren", "Coffee", "Rp 18.000", "Fresh Milk - 1 portion, Coffee Beans - 1 portion, Palm Sugar - 1 portion", "Pending Approval", "assets/menu/kopi_milk_gula_aren.png"));
+                insertSeedMenu(connection, new CafeMenuItem("Americano", "Coffee", "Rp 15.000", "Coffee Beans - 1 portion, Water - 1 portion", "Approved", "assets/menu/americano.png"));
+                insertSeedMenu(connection, new CafeMenuItem("Matcha Latte", "Non-Coffee", "Rp 22.000", "Matcha Powder - 1 portion, Fresh Milk - 1 portion, Sugar - 1 portion", "Approved", "assets/menu/matcha_latte.png"));
+                insertSeedMenu(connection, new CafeMenuItem("Almond Croissant", "Pastry", "Rp 25.000", "Flour - 1 portion, Butter - 1 portion, Almond - 1 portion", "Pending Approval", "assets/menu/almond_croissant.png"));
 
                 insertSeedOrder(connection, new OrderItem("#0228", "Thomas Tejo", "1x Americano", "16 January 2026", "Complete", "Card", 15000));
                 insertSeedOrder(connection, new OrderItem("#0229", "Miks Yermolay", "1x Matcha Latte", "16 January 2026", "Assigned", "Cash", 22000));
@@ -754,11 +854,12 @@ public final class SambiKopiDataStore {
                 }
             }
         }
-        try (PreparedStatement statement = connection.prepareStatement("INSERT OR IGNORE INTO menu_ingredients(menu_name, stock_product, quantity) VALUES(?, ?, ?)")) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT OR IGNORE INTO menu_ingredients(menu_name, stock_product, quantity, unit) VALUES(?, ?, ?, ?)")) {
             for (MenuIngredient ingredient : ingredients) {
                 statement.setString(1, menuName);
                 statement.setString(2, ingredient.getStockProduct());
                 statement.setInt(3, ingredient.getQuantity());
+                statement.setString(4, ingredient.getUnit());
                 statement.addBatch();
             }
             statement.executeBatch();

@@ -29,6 +29,7 @@ public class MenuController {
     @FXML private TextField priceField;
     @FXML private ComboBox<String> ingredientStockComboBox;
     @FXML private TextField ingredientQuantityField;
+    @FXML private ComboBox<String> ingredientUnitComboBox;
     @FXML private ListView<String> ingredientsListView;
     @FXML private Button chooseImageButton;
     @FXML private Label selectedImageLabel;
@@ -41,6 +42,8 @@ public class MenuController {
     private void initialize() {
         categoryComboBox.getItems().setAll("Coffee", "Non-Coffee", "Pastry");
         categoryComboBox.getSelectionModel().select("Coffee");
+        ingredientUnitComboBox.getItems().setAll("portion", "gram", "ml", "pcs", "scoop", "bottle");
+        ingredientUnitComboBox.getSelectionModel().select("portion");
         loadStockOptions();
         updateIngredientsList();
         selectedImageLabel.setText("No photo selected. Default image will be used.");
@@ -50,6 +53,7 @@ public class MenuController {
     @FXML
     private void handleAddIngredient() {
         String product = ingredientStockComboBox.getValue();
+        String unit = ingredientUnitComboBox.getValue();
         String quantityText = ingredientQuantityField.getText().trim();
 
         if (product == null || product.isBlank()) {
@@ -71,7 +75,7 @@ public class MenuController {
         }
 
         for (MenuIngredient ingredient : selectedIngredients) {
-            if (ingredient.getStockProduct().equalsIgnoreCase(product)) {
+            if (ingredient.getStockProduct().equalsIgnoreCase(product) && ingredient.getUnit().equalsIgnoreCase(unit)) {
                 ingredient.setQuantity(ingredient.getQuantity() + quantity);
                 updateIngredientsList();
                 ingredientQuantityField.clear();
@@ -80,10 +84,10 @@ public class MenuController {
             }
         }
 
-        selectedIngredients.add(new MenuIngredient("", product, quantity));
+        selectedIngredients.add(new MenuIngredient("", product, quantity, unit));
         updateIngredientsList();
         ingredientQuantityField.clear();
-        setStatus("Added ingredient: " + product + " x" + quantity, false);
+        setStatus("Added ingredient: " + product + " - " + quantity + " " + unit, false);
     }
 
     @FXML
@@ -157,7 +161,7 @@ public class MenuController {
 
         List<MenuIngredient> ingredientsToSave = new ArrayList<>();
         for (MenuIngredient ingredient : selectedIngredients) {
-            ingredientsToSave.add(new MenuIngredient(name, ingredient.getStockProduct(), ingredient.getQuantity()));
+            ingredientsToSave.add(new MenuIngredient(name, ingredient.getStockProduct(), ingredient.getQuantity(), ingredient.getUnit()));
         }
 
         String ingredientDisplay = SambiKopiDataStore.buildIngredientDisplay(ingredientsToSave);
@@ -200,6 +204,8 @@ public class MenuController {
         selectedImagePath = SambiKopiDataStore.DEFAULT_MENU_IMAGE;
         selectedImageLabel.setText("No photo selected. Default image will be used.");
         categoryComboBox.getSelectionModel().select("Coffee");
+        ingredientUnitComboBox.getItems().setAll("portion", "gram", "ml", "pcs", "scoop", "bottle");
+        ingredientUnitComboBox.getSelectionModel().select("portion");
         loadStockOptions();
     }
 

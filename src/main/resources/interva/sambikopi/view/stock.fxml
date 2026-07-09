@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/17"
@@ -51,6 +52,11 @@
                 style="-fx-background-color:#7D9B76; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
         <Button fx:id="addStockButton" onAction="#handleAddStock" text="Add Stock" prefHeight="46.0" prefWidth="140.0"
                 style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
+        <Button fx:id="editStockButton" onAction="#handleEditStock" text="Edit Stock" prefHeight="46.0" prefWidth="140.0"
+                style="-fx-background-color:white; -fx-border-color:#7D9B76; -fx-text-fill:#4F6448; -fx-font-weight:bold; -fx-background-radius:10; -fx-border-radius:10;" />
+
+        <Region HBox.hgrow="ALWAYS" />
+
         <Button fx:id="notifyOwnerButton" onAction="#handleNotifyOwner" text="Notify Owner" prefHeight="46.0" prefWidth="160.0"
                 style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:10;" />
     </HBox>

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS menu_ingredients (
     menu_name TEXT NOT NULL,
     stock_product TEXT NOT NULL,
     quantity INTEGER NOT NULL,
+    unit TEXT NOT NULL DEFAULT 'portion',
     PRIMARY KEY(menu_name, stock_product),
     FOREIGN KEY(menu_name) REFERENCES menu_items(menu_name) ON DELETE CASCADE,
     FOREIGN KEY(stock_product) REFERENCES inventory_items(product) ON UPDATE CASCADE

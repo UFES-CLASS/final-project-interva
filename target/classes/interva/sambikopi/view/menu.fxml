@@ -28,7 +28,7 @@
         <HBox spacing="20.0">
             <VBox spacing="8.0" prefWidth="400.0">
                 <Label text="MENU NAME" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-                <TextField fx:id="menuNameField" promptText="e.g. Kopi Milk Gula Aren" prefHeight="42.0"
+                <TextField fx:id="menuNameField" promptText="e.g. Kopi Susu Gula Aren" prefHeight="42.0"
                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
             </VBox>
 
@@ -60,10 +60,12 @@
         <VBox spacing="10.0">
             <Label text="INGREDIENTS FROM STOCK" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
             <HBox spacing="10.0">
-                <ComboBox fx:id="ingredientStockComboBox" promptText="Choose stock item" prefHeight="42.0" prefWidth="300.0"
+                <ComboBox fx:id="ingredientStockComboBox" promptText="Choose stock item" prefHeight="42.0" prefWidth="270.0"
                           style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
-                <TextField fx:id="ingredientQuantityField" promptText="Qty" prefHeight="42.0" prefWidth="100.0"
+                <TextField fx:id="ingredientQuantityField" promptText="Qty" prefHeight="42.0" prefWidth="80.0"
                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
+                <ComboBox fx:id="ingredientUnitComboBox" promptText="Unit" prefHeight="42.0" prefWidth="110.0"
+                          style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
                 <Button fx:id="addIngredientButton" onAction="#handleAddIngredient" text="Add Ingredient" prefHeight="42.0" prefWidth="150.0"
                         style="-fx-background-color:#C96B43; -fx-text-fill:white; -fx-font-weight:bold; -fx-background-radius:9;" />
                 <Button fx:id="removeIngredientButton" onAction="#handleRemoveIngredient" text="Remove" prefHeight="42.0" prefWidth="100.0"
