@@ -116,6 +116,7 @@ This project uses JavaFX data structures such as `ObservableList` and `FilteredL
 - Updated menu card image display to stretch and fill the image area
 - Updated IDR price format, for example `Rp 10.000`
 - Updated flexible screen
+- Added core inheritance using `CafeItem`, `CafeMenuItem`, and `InventoryItem`
 
 ## Notes
 

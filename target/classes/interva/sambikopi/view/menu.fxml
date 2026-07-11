@@ -28,7 +28,7 @@
         <HBox spacing="20.0" maxWidth="9999.0">
             <VBox spacing="8.0" HBox.hgrow="ALWAYS" minWidth="280.0" prefWidth="420.0" maxWidth="9999.0">
                 <Label text="MENU NAME" style="-fx-font-size:12px; -fx-font-weight:bold; -fx-text-fill:#2D1B14;" />
-                <TextField fx:id="menuNameField" promptText="e.g. Kopi Milk Gula Aren" prefHeight="42.0" maxWidth="9999.0"
+                <TextField fx:id="menuNameField" promptText="e.g. Kopi Susu Gula Aren" prefHeight="42.0" maxWidth="9999.0"
                            style="-fx-background-color:white; -fx-border-color:#E5D8C8; -fx-background-radius:9; -fx-border-radius:9;" />
             </VBox>
 

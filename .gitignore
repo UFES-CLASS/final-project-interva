@@ -1,0 +1,49 @@
+# Java / Maven build output
+*.class
+target/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# SQLite local database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-shm
+*.db-wal
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/private/
+build/
+dist/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven generated files
+dependency-reduced-pom.xml
+
+# Scene Builder backup files
+*.fxml~

@@ -3,7 +3,7 @@ package interva.sambikopi.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class CafeMenuItem {
+public class CafeMenuItem extends CafeItem {
     private final StringProperty menuName;
     private final StringProperty category;
     private final StringProperty price;
@@ -16,6 +16,7 @@ public class CafeMenuItem {
     }
 
     public CafeMenuItem(String menuName, String category, String price, String ingredients, String status, String imagePath) {
+        super(menuName, status);
         this.menuName = new SimpleStringProperty(menuName);
         this.category = new SimpleStringProperty(category);
         this.price = new SimpleStringProperty(price);
@@ -24,8 +25,14 @@ public class CafeMenuItem {
         this.imagePath = new SimpleStringProperty(imagePath == null || imagePath.isBlank() ? "assets/menu/default.png" : imagePath);
     }
 
+    @Override
+    public String getItemName() { return getMenuName(); }
+
     public String getMenuName() { return menuName.get(); }
-    public void setMenuName(String value) { menuName.set(value); }
+    public void setMenuName(String value) {
+        menuName.set(value);
+        setItemName(value);
+    }
     public StringProperty menuNameProperty() { return menuName; }
 
     public String getCategory() { return category.get(); }
@@ -40,11 +47,21 @@ public class CafeMenuItem {
     public void setIngredients(String value) { ingredients.set(value); }
     public StringProperty ingredientsProperty() { return ingredients; }
 
+    @Override
     public String getStatus() { return status.get(); }
-    public void setStatus(String value) { status.set(value); }
+    @Override
+    public void setStatus(String value) {
+        status.set(value);
+        super.setStatus(value);
+    }
     public StringProperty statusProperty() { return status; }
 
     public String getImagePath() { return imagePath.get(); }
     public void setImagePath(String value) { imagePath.set(value == null || value.isBlank() ? "assets/menu/default.png" : value); }
     public StringProperty imagePathProperty() { return imagePath; }
+
+    @Override
+    public String getItemType() {
+        return "Menu Item";
+    }
 }
