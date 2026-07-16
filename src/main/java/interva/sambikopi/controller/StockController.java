@@ -152,8 +152,10 @@ public class StockController {
         ButtonType saveButtonType = new ButtonType("Save Changes", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
+        final String originalProductName = selected.getProduct();
         TextField productField = new TextField(selected.getProduct());
-        productField.setEditable(false);
+        productField.setEditable(true);
+        productField.setPromptText("Product name");
 
         TextField stockField = new TextField(String.valueOf(selected.getStock()));
 
@@ -182,11 +184,13 @@ public class StockController {
                     return null;
                 }
 
-                if (stock < 0 || expDatePicker.getValue() == null) {
-                    setStatus("Stock cannot be negative and exp date cannot be empty.", true);
+                String product = SambiKopiDataStore.formatTitleCase(productField.getText());
+                if (product.isEmpty() || stock < 0 || expDatePicker.getValue() == null) {
+                    setStatus("Product, stock, and exp date must be valid.", true);
                     return null;
                 }
 
+                selected.setProduct(product);
                 selected.setStock(stock);
                 selected.setExpDate(expDatePicker.getValue().format(EXP_DATE_FORMATTER));
                 selected.setStatus(getStatusFromStock(stock));
@@ -196,7 +200,9 @@ public class StockController {
         });
 
         dialog.showAndWait().ifPresent(item -> {
-            SambiKopiDataStore.updateInventoryItem(item);
+            SambiKopiDataStore.updateInventoryItem(originalProductName, item);
+            filteredStockData.setPredicate(filteredStockData.getPredicate());
+            stockTable.getSelectionModel().select(item);
             stockTable.refresh();
             setStatus("Updated stock item: " + item.getProduct(), false);
         });

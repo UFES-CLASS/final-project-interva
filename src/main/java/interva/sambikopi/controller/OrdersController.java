@@ -2,7 +2,6 @@ package interva.sambikopi.controller;
 
 import interva.sambikopi.model.OrderItem;
 import interva.sambikopi.model.SambiKopiDataStore;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -33,22 +32,18 @@ public class OrdersController {
         colProduct.setCellValueFactory(new PropertyValueFactory<>("product"));
         colCreationDate.setCellValueFactory(new PropertyValueFactory<>("creationDate"));
         colPayment.setCellValueFactory(new PropertyValueFactory<>("paymentMethod"));
-        colStatus.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         filteredOrderData = new FilteredList<>(SambiKopiDataStore.getOrders(), order -> true);
         orderTable.setItems(filteredOrderData);
 
-        orderTable.getSelectionModel().selectedItemProperty().addListener((obs, oldOrder, selectedOrder) -> {
-            if (selectedOrder != null) {
-                setStatus("Selected order: " + selectedOrder.getOrderId() + " - " + selectedOrder.getCustomer(), false);
-            }
-        });
+        selectQueueFront();
 
         int newOrders = SambiKopiDataStore.consumeBaristaNotificationCount();
         if (newOrders > 0) {
-            setStatus("New cashier order received: " + newOrders + " order(s) waiting.", false);
+            setStatus("New cashier order received: " + newOrders + " order(s) waiting. Queue mode: process the front order first.", false);
         } else {
-            setStatus("Manage incoming cashier orders.", false);
+            showQueueFrontStatus("Queue mode enabled. Process the front order first.");
         }
     }
 
@@ -63,7 +58,8 @@ public class OrdersController {
     private void handleFilterOrders() {
         activeOnlyFilter = !activeOnlyFilter;
         applyFilters();
-        setStatus(activeOnlyFilter ? "Showing active orders only." : "Filter cleared.", false);
+        setStatus(activeOnlyFilter ? "Showing active orders only. Queue order is still enforced." : "Filter cleared. Queue order is still enforced.", false);
+        selectQueueFront();
     }
 
     @FXML
@@ -72,21 +68,22 @@ public class OrdersController {
         activeOnlyFilter = false;
         filteredOrderData.setPredicate(order -> true);
         orderTable.refresh();
-        setStatus("Orders refreshed.", false);
+        selectQueueFront();
+        showQueueFrontStatus("Orders refreshed.");
     }
 
     @FXML
     private void handleCompleteOrder() {
-        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
+        OrderItem selected = getSelectedQueueFrontOrder();
         if (selected == null) {
-            setStatus("Select an order first.", true);
             return;
         }
 
         SambiKopiDataStore.StockDeductionResult result = SambiKopiDataStore.completeOrderAndDeductStock(selected);
         orderTable.refresh();
         if (result.isSuccess()) {
-            setStatus(result.getMessage() + " " + selected.getOrderId(), false);
+            selectQueueFront();
+            setStatus(result.getMessage() + " " + selected.getOrderId() + ". Next order is now at the front of the queue.", false);
         } else {
             setStatus(result.getMessage(), true);
         }
@@ -103,14 +100,59 @@ public class OrdersController {
     }
 
     private void updateSelectedOrderStatus(String status, String successMessage) {
-        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
+        OrderItem selected = getSelectedQueueFrontOrder();
         if (selected == null) {
-            setStatus("Select an order first.", true);
             return;
         }
         SambiKopiDataStore.updateOrderStatus(selected, status);
         orderTable.refresh();
-        setStatus(successMessage + selected.getOrderId(), status.equals("Cancelled"));
+        selectQueueFront();
+        if (status.equals("Cancelled")) {
+            setStatus(successMessage + selected.getOrderId() + ". Next order is now at the front of the queue.", true);
+        } else {
+            setStatus(successMessage + selected.getOrderId() + ". This order remains at the front until completed or cancelled.", false);
+        }
+    }
+
+
+    private OrderItem getSelectedQueueFrontOrder() {
+        OrderItem queueFront = SambiKopiDataStore.peekNextOrderInQueue();
+        if (queueFront == null) {
+            setStatus("All orders have already been completed or cancelled.", false);
+            return null;
+        }
+
+        OrderItem selected = orderTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            orderTable.getSelectionModel().select(queueFront);
+            return queueFront;
+        }
+
+        if (selected != queueFront) {
+            orderTable.getSelectionModel().select(queueFront);
+            setStatus("Queue rule: process " + queueFront.getOrderId() + " first before handling " + selected.getOrderId() + ".", true);
+            return null;
+        }
+
+        return selected;
+    }
+
+    private void selectQueueFront() {
+        OrderItem queueFront = SambiKopiDataStore.peekNextOrderInQueue();
+        if (queueFront != null) {
+            orderTable.getSelectionModel().select(queueFront);
+        } else {
+            orderTable.getSelectionModel().clearSelection();
+        }
+    }
+
+    private void showQueueFrontStatus(String prefix) {
+        OrderItem queueFront = SambiKopiDataStore.peekNextOrderInQueue();
+        if (queueFront == null) {
+            setStatus(prefix + " All orders are already complete or cancelled.", false);
+        } else {
+            setStatus(prefix + " Front of queue: " + queueFront.getOrderId() + " - " + queueFront.getCustomer() + ".", false);
+        }
     }
 
     private void applyFilters() {

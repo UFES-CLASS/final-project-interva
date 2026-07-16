@@ -117,6 +117,9 @@ This project uses JavaFX data structures such as `ObservableList` and `FilteredL
 - Updated IDR price format, for example `Rp 10.000`
 - Updated flexible screen
 - Added core inheritance using `CafeItem`, `CafeMenuItem`, and `InventoryItem`
+- Updated Edit Stock rename function
+- Updated Queue in Barista -> Order
+- Updated images sources when upload photo will not visible
 
 ## Notes
 

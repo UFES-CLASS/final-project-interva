@@ -46,7 +46,7 @@ public class MenuController {
         ingredientUnitComboBox.getSelectionModel().select("portion");
         loadStockOptions();
         updateIngredientsList();
-        selectedImageLabel.setText("No photo selected. Default image will be used.");
+        selectedImageLabel.setText("No photo selected.");
         setStatus("Fill the menu form, choose ingredients from Stock, then submit it for Owner review.", false);
     }
 
@@ -130,7 +130,7 @@ public class MenuController {
             Files.copy(selectedFile.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
 
             selectedImagePath = target.toString().replace('\\', '/');
-            selectedImageLabel.setText(selectedImagePath);
+            selectedImageLabel.setText("Photo selected.");
             setStatus("Photo selected and saved to assets folder.", false);
         } catch (IOException e) {
             setStatus("Failed to copy image: " + e.getMessage(), true);
@@ -202,7 +202,7 @@ public class MenuController {
         selectedIngredients.clear();
         updateIngredientsList();
         selectedImagePath = SambiKopiDataStore.DEFAULT_MENU_IMAGE;
-        selectedImageLabel.setText("No photo selected. Default image will be used.");
+        selectedImageLabel.setText("No photo selected.");
         categoryComboBox.getSelectionModel().select("Coffee");
         ingredientUnitComboBox.getItems().setAll("portion", "gram", "ml", "pcs", "scoop", "bottle");
         ingredientUnitComboBox.getSelectionModel().select("portion");
